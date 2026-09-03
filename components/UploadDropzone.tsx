@@ -641,8 +641,8 @@ export default function UploadDropzone() {
                       {items.length} Ready
                     </span>
                   </h3>
-                  <p className="text-xs text-slate-400 mt-0.5">
-                    Review, name, or remove individual coconut trees before submitting to the OpenCV jury.
+                  <p className="text-xs text-slate-300 mt-0.5">
+                    ✨ <strong className="text-gold-300">Name each coconut below</strong> (e.g. &ldquo;Lord of Varkala&rdquo;, &ldquo;Coastal King&rdquo;) and set its grove location before starting the analysis!
                   </p>
                 </div>
 
@@ -706,36 +706,44 @@ export default function UploadDropzone() {
                       )}
                     </div>
 
-                    {/* Metadata Inputs */}
-                    <div className="p-3 space-y-2">
-                      <div>
-                        <label className="block text-[10px] uppercase font-mono text-slate-400 mb-0.5">
-                          Contestant Name
-                        </label>
+                    {/* Prominent Metadata Name & Origin Inputs */}
+                    <div className="p-4 space-y-3 bg-palace-950/80 border-t border-slate-800">
+                      <div className="space-y-1">
+                        <div className="flex items-center justify-between">
+                          <label className="text-[11px] font-serif font-bold text-gold-300 flex items-center gap-1.5">
+                            <span>🏷️</span>
+                            <span>Contestant Palm Name</span>
+                          </label>
+                          <span className="text-[9px] font-mono text-emerald-400 font-semibold bg-emerald-950/80 px-1.5 py-0.5 rounded border border-emerald-500/30">
+                            Custom Title
+                          </span>
+                        </div>
                         <input
                           type="text"
                           value={item.name}
                           onChange={(e) => handleUpdateItemName(item.id, e.target.value)}
-                          placeholder="e.g., Lord Palmerston"
-                          className="w-full px-2.5 py-1.5 rounded-lg bg-palace-900 border border-slate-800 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500 font-semibold"
+                          placeholder="e.g., Lord of Varkala, Coconut Supreme"
+                          className="w-full px-3 py-2 rounded-xl bg-palace-900 border border-gold-500/30 hover:border-gold-400 focus:border-gold-400 focus:ring-2 focus:ring-gold-400/20 text-xs text-white placeholder-slate-500 font-serif font-bold transition-all shadow-inner"
                         />
                       </div>
 
-                      <div>
-                        <label className="block text-[10px] uppercase font-mono text-slate-400 mb-0.5">
-                          Provenance / Origin
+                      <div className="space-y-1">
+                        <label className="text-[10px] uppercase font-mono text-slate-400 flex items-center gap-1">
+                          <span>📍</span>
+                          <span>Grove / Provenance Location</span>
                         </label>
                         <input
                           type="text"
                           value={item.origin}
                           onChange={(e) => handleUpdateItemOrigin(item.id, e.target.value)}
-                          placeholder="e.g., Alleppey"
-                          className="w-full px-2.5 py-1 rounded-lg bg-palace-900 border border-slate-800 text-[11px] text-slate-300 placeholder-slate-600 focus:outline-none focus:border-emerald-500"
+                          placeholder="e.g., Alappuzha, Varkala Cliff, Beach Road"
+                          className="w-full px-3 py-1.5 rounded-xl bg-palace-900 border border-slate-800 hover:border-slate-700 focus:border-emerald-500 text-[11px] text-slate-200 placeholder-slate-600 focus:outline-none transition-all"
                         />
                       </div>
 
-                      <div className="text-[10px] font-mono text-slate-500 truncate pt-0.5">
-                        {(item.fileSize / 1024).toFixed(0)} KB • {item.fileName}
+                      <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 pt-1 border-t border-slate-800/60">
+                        <span>{(item.fileSize / 1024).toFixed(0)} KB</span>
+                        <span className="truncate max-w-[120px]">{item.fileName}</span>
                       </div>
                     </div>
                   </div>
