@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Crown, Sparkles, Trophy, Upload, Menu, X, Activity } from 'lucide-react';
+import { Crown, Sparkles, Trophy, Upload, Menu, X, Activity, Shield } from 'lucide-react';
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -12,8 +12,9 @@ export default function Navbar() {
   const navLinks = [
     { href: '/', label: 'Grand Hall', icon: Sparkles },
     { href: '/judge', label: 'Jury Chamber', icon: Upload },
+    { href: '/awards', label: 'Coronation 👑', icon: Crown },
     { href: '/leaderboard', label: 'Leaderboard', icon: Trophy },
-    { href: '/results', label: 'Official Dossier', icon: Crown },
+    { href: '/results', label: 'Official Dossier', icon: Shield },
   ];
 
   return (

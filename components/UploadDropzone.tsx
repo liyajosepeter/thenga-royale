@@ -12,18 +12,20 @@ import {
   RefreshCw, 
   Layers, 
   X, 
-  Image as ImageIcon,
-  Shield,
-  FileWarning,
-  Trophy,
-  ArrowRight,
-  Cpu,
-  ArrowUpRight,
-  AlertTriangle,
-  RotateCcw
+  Image as ImageIcon, 
+  Shield, 
+  FileWarning, 
+  Trophy, 
+  ArrowRight, 
+  Cpu, 
+  ArrowUpRight, 
+  AlertTriangle, 
+  RotateCcw,
+  Crown
 } from 'lucide-react';
 import { UploadedCoconutItem, Contestant } from '@/lib/types';
 import { persistCoconutEntries } from '@/lib/supabase';
+import { calculatePageantAwards } from '@/lib/awards';
 import MetricBar from './MetricBar';
 import AwardBadge from './AwardBadge';
 
@@ -324,13 +326,18 @@ export default function UploadDropzone() {
       });
     }
 
+    // Deterministically calculate awards and rank order for the flight
+    const evaluatedList = successfulList.length > 0
+      ? calculatePageantAwards(successfulList).allContestants
+      : [];
+
     // Persist all successful batch contestants to Supabase and LocalStorage
-    if (successfulList.length > 0) {
-      await persistCoconutEntries(successfulList);
+    if (evaluatedList.length > 0) {
+      await persistCoconutEntries(evaluatedList);
     }
 
     setAnalyzedResults({
-      successful: successfulList,
+      successful: evaluatedList,
       failed: failedList
     });
 
@@ -348,7 +355,7 @@ export default function UploadDropzone() {
   const formatPadded = (n: number) => n.toString().padStart(2, '0');
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10 max-w-5xl mx-auto">
       
       {/* Hidden Native File Input */}
       <input
@@ -380,22 +387,31 @@ export default function UploadDropzone() {
             </div>
 
             <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
-              <button
-                type="button"
-                onClick={handleResetForNewFlight}
-                className="flex items-center justify-center gap-2 py-3 px-5 rounded-2xl bg-palace-900 hover:bg-palace-800 text-slate-300 border border-slate-700 text-xs font-semibold transition-colors flex-1 md:flex-initial"
+              <Link
+                id="proceed-to-coronation-button"
+                href="/awards"
+                className="flex items-center justify-center gap-2 py-3.5 px-6 rounded-2xl bg-gradient-to-r from-gold-400 via-amber-400 to-gold-500 hover:from-gold-300 hover:to-amber-300 text-slate-950 font-serif font-black text-xs transition-all duration-200 glow-gold flex-1 md:flex-initial shadow-xl scale-105"
               >
-                <RotateCcw className="w-4 h-4" />
-                <span>Analyze Another Flight 🌴</span>
-              </button>
+                <Crown className="w-4 h-4" />
+                <span>PROCEED TO CORONATION CEREMONY 👑</span>
+              </Link>
 
               <Link
                 href="/leaderboard"
-                className="flex items-center justify-center gap-2 py-3 px-6 rounded-2xl bg-gradient-to-r from-gold-500 via-amber-400 to-gold-500 hover:from-gold-400 hover:to-amber-300 text-slate-950 font-serif font-black text-xs transition-all duration-200 glow-gold flex-1 md:flex-initial"
+                className="flex items-center justify-center gap-2 py-3 px-5 rounded-2xl bg-palace-900 hover:bg-palace-800 text-gold-300 border border-gold-500/30 text-xs font-semibold transition-colors flex-1 md:flex-initial"
               >
                 <Trophy className="w-4 h-4" />
-                <span>View Global Leaderboard 🏆</span>
+                <span>Leaderboard</span>
               </Link>
+
+              <button
+                type="button"
+                onClick={handleResetForNewFlight}
+                className="flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-palace-900 hover:bg-palace-800 text-slate-400 hover:text-white border border-slate-700 text-xs font-semibold transition-colors flex-1 md:flex-initial"
+              >
+                <RotateCcw className="w-4 h-4" />
+                <span>New Flight</span>
+              </button>
             </div>
           </div>
 

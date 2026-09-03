@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { Contestant } from './types';
+import { calculatePageantAwards } from './awards';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
@@ -19,9 +20,12 @@ export const supabase = isSupabaseConfigured
 
 /**
  * Fetches all user-entered coconut entries sorted by overall_score DESC.
- * Returns ONLY what the user/operator has actually uploaded (no fake mock data).
+ * Returns ONLY what the user/operator has actually uploaded (no fake mock data),
+ * enriched with official pageant award titles.
  */
 export async function fetchLeaderboardEntries(): Promise<Contestant[]> {
+  let rawList: Contestant[] = [];
+
   // Case A: Attempt fetching from Supabase
   if (supabase) {
     try {
@@ -30,8 +34,8 @@ export async function fetchLeaderboardEntries(): Promise<Contestant[]> {
         .select('*')
         .order('overall_score', { ascending: false });
 
-      if (!error && data) {
-        return data.map((row: any, idx: number) => ({
+      if (!error && data && data.length > 0) {
+        rawList = data.map((row: any, idx: number) => ({
           id: row.id,
           name: row.name || 'Contestant Palm',
           origin: row.origin || 'Coastal Grove',
@@ -56,30 +60,29 @@ export async function fetchLeaderboardEntries(): Promise<Contestant[]> {
   }
 
   // Case B: Local Storage (Strictly user-entered coconuts)
-  if (typeof window !== 'undefined') {
+  if (rawList.length === 0 && typeof window !== 'undefined') {
     try {
       const stored = localStorage.getItem('thenga_contestants');
       if (stored) {
         const localList: Contestant[] = JSON.parse(stored);
-        // Filter unique by ID
         const map = new Map<string, Contestant>();
         localList.forEach((c) => {
           if (!map.has(c.id)) map.set(c.id, c);
         });
-        const combined = Array.from(map.values());
-        combined.sort((a, b) => b.scores.overall - a.scores.overall);
-        combined.forEach((c, idx) => {
-          c.rank = idx + 1;
-        });
-        return combined;
+        rawList = Array.from(map.values());
       }
     } catch (e) {
       console.warn('LocalStorage error:', e);
     }
   }
 
-  // If no coconuts entered yet, return empty list (No mock data)
-  return [];
+  if (rawList.length === 0) {
+    return [];
+  }
+
+  // Calculate and attach deterministic awards
+  const awardsResult = calculatePageantAwards(rawList);
+  return awardsResult.allContestants;
 }
 
 /**
