@@ -41,6 +41,59 @@ const STAGE_MESSAGES = [
   'Calibrating chlorophyll majesty...'
 ];
 
+const SARCASTIC_MONIKERS = [
+  'Lord Frondington III',
+  'Baron von Coconut',
+  'The Kovalam Drama Queen',
+  'Sir Chlorophyll the Bold',
+  'The Alappuzha Runway Menace',
+  'Count of Monte Coconut',
+  'The Disheveled Aristocrat',
+  'Maharaja of the Monsoon',
+  'Lady Foliage the Third',
+  'Captain Kera of Kumarakom',
+  'The Sassy Frond Supreme',
+  'His Arboreal Highness',
+  'The Varkala Wind Magnet',
+  'The Cartesian Snob',
+  'Princess Frondarella',
+  'Sir Palm-a-Lot',
+  'The Asymmetric Rebel',
+  'The Backwater Diva',
+  'The Gravity Denier',
+  'Viscount of Vypeen',
+  'The Malabar Headturner',
+  'The Palm Tree with an Attitude',
+  'The Hurricane Philosopher',
+  'General Chloroplast',
+  'The Coconut Casanova',
+  'The Drama Queen of Kerala',
+  'Sir Fronds-a-Million',
+  'The Bohemian Canopy',
+  'Duke of Deciduous Drama',
+  'The Coastal Overthinker',
+  'Lord of the Fronds',
+  'The Monsoon Monologue Master',
+  'Countess of Kumarakom',
+  'The Palm That Knows Too Much',
+  'Archduke of Alleppey',
+  'The Runway Rascal',
+  'Baroness von Chloroplast',
+  'The High-Maintenance Frond',
+  'The Windswept Philosopher',
+  'The Overachieving Palm'
+];
+
+function getSmartContestantName(rawFileName: string, existingIndex: number): string {
+  const base = rawFileName.replace(/\.[^/.]+$/, '').trim();
+  const isGeneric = /(whatsapp|img|dsc|pxl|photo|image|screenshot|download|\d{4,}|\bcopy\b)/i.test(base) || base.length > 22;
+  if (isGeneric) {
+    return SARCASTIC_MONIKERS[existingIndex % SARCASTIC_MONIKERS.length];
+  }
+  const formatted = base.replace(/[-_]/g, ' ');
+  return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+}
+
 export default function UploadDropzone() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -140,13 +193,12 @@ export default function UploadDropzone() {
 
       // Read as persistent Base64 Data URL
       const previewUrl = await readFileAsDataUrl(file);
-      const autoName = file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
-      const cleanName = autoName.charAt(0).toUpperCase() + autoName.slice(1);
+      const smartName = getSmartContestantName(file.name, items.length + validFiles.length);
 
       validFiles.push({
         id: `upload-${Date.now()}-${Math.random().toString(36).substring(2, 7)}-${index}`,
         previewUrl,
-        name: cleanName || `Contestant Palm #${items.length + validFiles.length + 1}`,
+        name: smartName || `Contestant Palm #${items.length + validFiles.length + 1}`,
         origin: 'Coastal Grove',
         fileSize: file.size,
         fileName: file.name,

@@ -4,34 +4,317 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Contestant } from '@/lib/types';
+import { fetchLeaderboardEntries } from '@/lib/supabase';
 import AwardBadge from '@/components/AwardBadge';
 import MetricBar from '@/components/MetricBar';
-import { Crown, Sparkles, Trophy, ArrowLeft, Share2, Check, Download, Layers, ShieldCheck, MapPin } from 'lucide-react';
+import { 
+  Crown, 
+  Sparkles, 
+  Trophy, 
+  ArrowLeft, 
+  Share2, 
+  Check, 
+  Download, 
+  Printer, 
+  Layers, 
+  ShieldCheck, 
+  MapPin, 
+  Award,
+  Calendar,
+  CheckCircle2,
+  RefreshCw
+} from 'lucide-react';
 
 function ResultsContent() {
   const searchParams = useSearchParams();
-  const contestantId = searchParams.get('id') || 'contestant-1';
+  const contestantId = searchParams.get('id') || '';
 
   const [contestant, setContestant] = useState<Contestant | null>(null);
   const [showCVOverlay, setShowCVOverlay] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Search user-uploaded contestants from localStorage
-    try {
-      const stored = localStorage.getItem('thenga_contestants');
-      if (stored) {
-        const localList: Contestant[] = JSON.parse(stored);
-        const match = localList.find((c) => c.id === contestantId) || localList[0];
-        if (match) {
+    async function loadContestant() {
+      setIsLoading(true);
+      try {
+        const fullRoster = await fetchLeaderboardEntries();
+        if (fullRoster.length > 0) {
+          const match = fullRoster.find(
+            (c) => String(c.id) === String(contestantId) || c.name.toLowerCase() === contestantId.toLowerCase()
+          ) || fullRoster[0];
           setContestant(match);
-          return;
         }
+      } catch (e) {
+        console.warn('Error loading dossier:', e);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (e) {
-      // LocalStorage fallback
     }
+    loadContestant();
   }, [contestantId]);
+
+  const handleCopyLink = () => {
+    if (typeof window !== 'undefined') {
+      navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  const handlePrint = () => {
+    if (typeof window !== 'undefined') {
+      window.print();
+    }
+  };
+
+  // High-Resolution Graphical Certificate Image Generator & Downloader
+  const handleDownloadCertificateImage = async () => {
+    if (!contestant || isGeneratingImage) return;
+
+    setIsGeneratingImage(true);
+
+    try {
+      const canvas = document.createElement('canvas');
+      const width = 1200;
+      const height = 850;
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) throw new Error('Canvas context unavailable');
+
+      // 1. Background Gradient (Deep Botanical Forest Green)
+      const bgGrad = ctx.createRadialGradient(width / 2, height / 3, 50, width / 2, height / 2, 700);
+      bgGrad.addColorStop(0, '#0E271E');
+      bgGrad.addColorStop(0.5, '#081812');
+      bgGrad.addColorStop(1, '#050E0B');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, width, height);
+
+      // 2. Metallic Gold Border
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = '#D4AF37';
+      ctx.strokeRect(20, 20, width - 40, height - 40);
+
+      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = '#E6CA85';
+      ctx.strokeRect(28, 28, width - 56, height - 56);
+
+      // 3. Header Text
+      ctx.fillStyle = '#E6CA85';
+      ctx.font = 'bold 13px "Courier New", monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText('👑 THE HIGH COMMISSION FOR ARBOREAL SPLENDOR • THENGA ROYALE 2026 👑', width / 2, 60);
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = 'bold 36px Georgia, serif';
+      ctx.fillText('OFFICIAL CERTIFICATE OF ARBOREAL SPLENDOR', width / 2, 105);
+
+      ctx.fillStyle = '#38B289';
+      ctx.font = '13px "Courier New", monospace';
+      ctx.fillText('CERTIFIED BY PYTHON & OPENCV COMPUTER VISION PROTOCOL', width / 2, 130);
+
+      // 4. Horizontal Separator
+      ctx.strokeStyle = 'rgba(212, 175, 55, 0.4)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(60, 148);
+      ctx.lineTo(width - 60, 148);
+      ctx.stroke();
+
+      // 5. Load and Draw Contestant Photo
+      const photoWidth = 440;
+      const photoHeight = 350;
+      const photoX = 60;
+      const photoY = 175;
+
+      // Draw photo container background & border
+      ctx.fillStyle = '#050E0B';
+      ctx.fillRect(photoX, photoY, photoWidth, photoHeight);
+      ctx.strokeStyle = '#D4AF37';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(photoX, photoY, photoWidth, photoHeight);
+
+      // Load Image
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      await new Promise<void>((resolve) => {
+        img.onload = () => {
+          try {
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(photoX, photoY, photoWidth, photoHeight);
+            ctx.clip();
+            ctx.drawImage(img, photoX, photoY, photoWidth, photoHeight);
+            ctx.restore();
+          } catch (e) {
+            console.warn('Error drawing image on canvas:', e);
+          }
+          resolve();
+        };
+        img.onerror = () => resolve();
+        img.src = contestant.image_url;
+      });
+
+      // Overlay on photo: Rank Tag
+      ctx.fillStyle = '#D4AF37';
+      ctx.fillRect(photoX + 12, photoY + 12, 110, 26);
+      ctx.fillStyle = '#050E0B';
+      ctx.font = 'bold 12px Georgia, serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(`RANK #${contestant.rank || 1}`, photoX + 67, photoY + 29);
+
+      // 6. Right Side Details
+      const infoX = 540;
+      ctx.textAlign = 'left';
+
+      // Hairstyle Title Badge
+      if (contestant.hairstyle_title) {
+        ctx.fillStyle = '#1A3326';
+        ctx.fillRect(infoX, 175, 580, 28);
+        ctx.strokeStyle = '#D4AF37';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(infoX, 175, 580, 28);
+
+        ctx.fillStyle = '#E6CA85';
+        ctx.font = 'bold 12px Georgia, serif';
+        ctx.fillText(`✨ ${contestant.hairstyle_title.toUpperCase()} ✨`, infoX + 14, 194);
+      }
+
+      // Contestant Name
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = 'bold 32px Georgia, serif';
+      ctx.fillText(contestant.name, infoX, 240);
+
+      // Provenance
+      ctx.fillStyle = '#9CA3AF';
+      ctx.font = '14px sans-serif';
+      ctx.fillText(`📍 Grove Origin: ${contestant.origin || 'Coastal Grove, Kerala'}`, infoX, 265);
+
+      // Composite Rating Pill
+      ctx.fillStyle = '#112217';
+      ctx.fillRect(infoX, 285, 260, 48);
+      ctx.strokeStyle = '#D4AF37';
+      ctx.strokeRect(infoX, 285, 260, 48);
+
+      ctx.fillStyle = '#E6CA85';
+      ctx.font = 'bold 11px monospace';
+      ctx.fillText('FINAL COMPOSITE RATING:', infoX + 14, 305);
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = 'bold 20px Georgia, serif';
+      ctx.fillText(`${contestant.scores.overall.toFixed(1)} / 100`, infoX + 14, 326);
+
+      // 7. 4 Dimensions Meter Bars
+      const barsY = 355;
+      const metrics = [
+        { label: '🌿 Hair Volume (30%)', score: contestant.scores.volume },
+        { label: '↔️ Hair Spread (25%)', score: contestant.scores.spread },
+        { label: '⚖️ Symmetry (25%)', score: contestant.scores.symmetry },
+        { label: '💨 Wind Style (20%)', score: contestant.scores.wind_style },
+      ];
+
+      metrics.forEach((m, idx) => {
+        const rowY = barsY + (idx * 40);
+        ctx.fillStyle = '#D1D5DB';
+        ctx.font = '13px Georgia, serif';
+        ctx.fillText(m.label, infoX, rowY + 14);
+
+        ctx.fillStyle = '#E6CA85';
+        ctx.font = 'bold 13px monospace';
+        ctx.textAlign = 'right';
+        ctx.fillText(`${m.score.toFixed(1)} / 100`, infoX + 580, rowY + 14);
+        ctx.textAlign = 'left';
+
+        // Track
+        ctx.fillStyle = '#0F261C';
+        ctx.fillRect(infoX, rowY + 20, 580, 8);
+
+        // Fill
+        ctx.fillStyle = '#28A77B';
+        const fillW = Math.min((m.score / 100) * 580, 580);
+        ctx.fillRect(infoX, rowY + 20, fillW, 8);
+      });
+
+      // 8. Jury Proclamation Box (Lower center)
+      const commY = 560;
+      ctx.fillStyle = '#081711';
+      ctx.fillRect(60, commY, width - 120, 85);
+      ctx.strokeStyle = 'rgba(56, 178, 137, 0.3)';
+      ctx.strokeRect(60, commY, width - 120, 85);
+
+      ctx.fillStyle = '#E6CA85';
+      ctx.font = 'bold 12px Georgia, serif';
+      ctx.fillText('📜 OFFICIAL JURY CONCLAVE PROCLAMATION:', 80, commY + 26);
+
+      ctx.fillStyle = '#E5E7EB';
+      ctx.font = 'italic 13px Georgia, serif';
+      const comment = contestant.jury_comment || `${contestant.name} demonstrates certified canopy equilibrium and commanding botanical poise on the 2026 runway.`;
+      ctx.fillText(`“${comment.length > 120 ? comment.substring(0, 117) + '...' : comment}”`, 80, commY + 54);
+
+      // 9. Bottom Signatory Blocks & High Commission Gold Seal
+      const signY = 675;
+      ctx.strokeStyle = 'rgba(212, 175, 55, 0.4)';
+      ctx.beginPath();
+      ctx.moveTo(60, signY);
+      ctx.lineTo(width - 60, signY);
+      ctx.stroke();
+
+      // Left Signatory
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = 'bold 14px Georgia, serif';
+      ctx.fillText('Dr. K. Frondington', 80, signY + 35);
+      ctx.fillStyle = '#38B289';
+      ctx.font = '11px monospace';
+      ctx.fillText('Chief Canopy Adjudicator', 80, signY + 52);
+      ctx.fillStyle = '#6B7280';
+      ctx.fillText('Dept. of Arboreal Geometry', 80, signY + 68);
+
+      // Center Gold Seal
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#D4AF37';
+      ctx.font = '28px serif';
+      ctx.fillText('👑', width / 2, signY + 38);
+      ctx.font = 'bold 10px monospace';
+      ctx.fillText('OFFICIAL HIGH COMMISSION SEAL', width / 2, signY + 56);
+      ctx.fillStyle = '#9CA3AF';
+      ctx.fillText('AUTHENTICATED VIA OPENCV 3.14', width / 2, signY + 70);
+
+      // Right Signatory
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = 'bold 14px Georgia, serif';
+      ctx.fillText('Prof. S. Chloroplast', width - 80, signY + 35);
+      ctx.fillStyle = '#E6CA85';
+      ctx.font = '11px monospace';
+      ctx.fillText('High Sovereign Registrar', width - 80, signY + 52);
+      ctx.fillStyle = '#6B7280';
+      ctx.fillText('International Coconut Council', width - 80, signY + 68);
+
+      // 10. Trigger Instant PNG Download
+      const safeName = contestant.name.replace(/[^a-zA-Z0-9]/g, '_');
+      const link = document.createElement('a');
+      link.download = `Thenga_Royale_Certificate_${safeName}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+
+    } catch (err) {
+      console.error('Error generating certificate image:', err);
+      alert('Unable to generate certificate image. Please try again.');
+    } finally {
+      setIsGeneratingImage(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="glass-panel p-16 rounded-3xl text-center space-y-4 max-w-md mx-auto">
+        <div className="w-8 h-8 border-2 border-gold-400 border-t-transparent rounded-full animate-spin mx-auto" />
+        <h3 className="font-serif text-lg font-bold text-white">Retrieving Sovereign Certificate...</h3>
+      </div>
+    );
+  }
 
   if (!contestant) {
     return (
@@ -51,21 +334,13 @@ function ResultsContent() {
     );
   }
 
-  const handleCopyLink = () => {
-    if (typeof window !== 'undefined') {
-      navigator.clipboard.writeText(window.location.href);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
-
   const isWinner = contestant.rank === 1;
 
   return (
-    <div className="space-y-10 max-w-5xl mx-auto">
+    <div className="space-y-8 max-w-5xl mx-auto">
       
-      {/* Top Breadcrumb & Controls */}
-      <div className="flex items-center justify-between">
+      {/* Top Breadcrumb & Controls (Hidden on Print) */}
+      <div className="no-print flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-emerald-950/60 pb-4">
         <Link
           href="/leaderboard"
           className="flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-emerald-400 transition-colors"
@@ -74,10 +349,10 @@ function ResultsContent() {
           <span>Back to Sovereign Leaderboard</span>
         </Link>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2.5">
           <button
             onClick={() => setShowCVOverlay(!showCVOverlay)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
+            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-medium transition-all ${
               showCVOverlay
                 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
                 : 'bg-palace-900 text-slate-400 border border-slate-700 hover:text-white'
@@ -89,28 +364,57 @@ function ResultsContent() {
 
           <button
             onClick={handleCopyLink}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-palace-900 hover:bg-palace-800 text-slate-300 border border-slate-700 text-xs font-medium transition-colors"
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-palace-900 hover:bg-palace-850 text-slate-300 border border-slate-700 text-xs font-medium transition-colors shadow-sm"
           >
             {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Share2 className="w-3.5 h-3.5" />}
             <span>{copied ? 'Link Copied!' : 'Share Dossier'}</span>
           </button>
+
+          {/* DOWNLOAD CERTIFICATE IMAGE BUTTON */}
+          <button
+            id="download-certificate-button"
+            disabled={isGeneratingImage}
+            onClick={handleDownloadCertificateImage}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-gold-500 via-amber-400 to-gold-500 hover:from-gold-400 hover:to-amber-300 text-slate-950 font-serif font-black text-xs uppercase tracking-wider transition-all duration-200 shadow-xl hover:scale-105 active:scale-95 border border-gold-300 disabled:opacity-50 cursor-pointer"
+          >
+            {isGeneratingImage ? (
+              <>
+                <RefreshCw className="w-4 h-4 animate-spin" />
+                <span>GENERATING IMAGE...</span>
+              </>
+            ) : (
+              <>
+                <Download className="w-4 h-4" />
+                <span>DOWNLOAD CERTIFICATE (PNG) 📥</span>
+              </>
+            )}
+          </button>
+
+          {/* Quick Print Option */}
+          <button
+            onClick={handlePrint}
+            title="Print or Save as PDF"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-palace-900 hover:bg-palace-850 text-slate-300 border border-slate-700 text-xs font-medium transition-colors"
+          >
+            <Printer className="w-3.5 h-3.5" />
+          </button>
         </div>
       </div>
 
-      {/* Sovereign Pageant Certificate */}
+      {/* Printable Sovereign Pageant Certificate */}
       <div
-        className={`rounded-3xl p-6 sm:p-10 relative overflow-hidden transition-all duration-300 ${
+        className={`printable-certificate rounded-3xl p-6 sm:p-10 relative overflow-hidden transition-all duration-300 ${
           isWinner
             ? 'glass-panel-gold glow-gold border-gold-400/60'
             : 'glass-panel border-emerald-500/40'
         }`}
       >
-        {/* Certificate Watermark Ribbon */}
+        {/* Certificate Header Banner */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-emerald-950 pb-6 gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-widest text-gold-400">
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span>Official Certificate of Arboreal Splendor</span>
+              <span>Official Sovereign Certificate of Arboreal Splendor</span>
             </div>
             <div className="flex flex-wrap items-center gap-3 mt-1">
               <h1 className="font-serif text-3xl sm:text-4xl font-extrabold text-white">
@@ -126,14 +430,14 @@ function ResultsContent() {
             {contestant.origin && (
               <div className="flex items-center gap-1.5 text-xs text-slate-400 mt-1">
                 <MapPin className="w-3.5 h-3.5 text-emerald-400" />
-                <span>{contestant.origin}</span>
+                <span>Grove Origin: {contestant.origin}</span>
               </div>
             )}
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4 flex-shrink-0">
             <div className="text-right">
-              <div className="text-[10px] uppercase text-slate-400 font-medium">Final Certified Rating</div>
+              <div className="text-[10px] uppercase text-slate-400 font-mono tracking-wider">Composite Score</div>
               <div className="font-serif text-4xl font-black gold-gradient-text">
                 {contestant.scores.overall.toFixed(1)}
                 <span className="text-sm font-normal text-slate-400 ml-1">/ 100</span>
@@ -154,7 +458,7 @@ function ResultsContent() {
           </div>
         </div>
 
-        {/* Awards Conferred */}
+        {/* Awards Conferred Badges */}
         {contestant.awards && contestant.awards.length > 0 && (
           <div className="pt-6 flex flex-wrap gap-2.5 items-center">
             <span className="text-xs text-slate-400 font-semibold font-serif">Conferred Pageant Honors:</span>
@@ -165,7 +469,7 @@ function ResultsContent() {
         )}
 
         {/* Main Body: Image with CV scanner overlay & Score details */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-8 items-start">
           
           {/* Photo with CV Overlay */}
           <div className="lg:col-span-6 space-y-3">
@@ -179,17 +483,16 @@ function ResultsContent() {
                 }}
               />
 
-              {/* Simulated Computer Vision Annotations Overlay */}
+              {/* Computer Vision Annotations Overlay */}
               {showCVOverlay && (
                 <div className="absolute inset-0 pointer-events-none">
-                  {/* Canopy Bounding Box */}
                   <div
                     className="absolute border-2 border-emerald-400/80 rounded-lg bg-emerald-500/10 shadow-[0_0_15px_rgba(52,211,153,0.3)]"
                     style={{
                       left: '12%',
-                      top: '15%',
+                      top: '12%',
                       width: '76%',
-                      height: '65%',
+                      height: '74%',
                     }}
                   >
                     <div className="absolute -top-3 left-2 px-1.5 py-0.5 rounded bg-palace-950 border border-emerald-400 text-[9px] font-mono text-emerald-300">
@@ -197,27 +500,21 @@ function ResultsContent() {
                     </div>
                   </div>
 
-                  {/* Symmetry Vertical Midline Axis */}
                   <div className="absolute left-1/2 top-4 bottom-4 w-0.5 bg-dashed border-l border-gold-400/70 shadow-[0_0_8px_rgba(250,204,21,0.6)]">
                     <div className="absolute -top-2 -left-6 px-1 py-0.5 rounded bg-palace-950 border border-gold-400 text-[8px] font-mono text-gold-300">
                       Center Axis
                     </div>
-                  </div>
-
-                  {/* Frond Gradient Direction Indicators */}
-                  <div className="absolute top-1/3 left-1/4 text-emerald-300 text-xs font-mono animate-pulse">
-                    &larr; Vector L (48.8%)
-                  </div>
-                  <div className="absolute top-1/3 right-1/4 text-emerald-300 text-xs font-mono animate-pulse">
-                    Vector R (51.2%) &rarr;
                   </div>
                 </div>
               )}
             </div>
 
             <div className="flex items-center justify-between text-[11px] text-slate-400 px-1 font-mono">
-              <span>Segmented Frond Pixels: ~{contestant.frond_pixel_count?.toLocaleString() || '42,800'} px</span>
-              <span className="text-emerald-400">Status: Verified CV 3.13</span>
+              <span>Segmented Canopy Pixels: ~{contestant.frond_pixel_count?.toLocaleString() || '42,800'} px</span>
+              <span className="text-emerald-400 flex items-center gap-1">
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                <span>Python & OpenCV Calibrated</span>
+              </span>
             </div>
           </div>
 
@@ -249,8 +546,7 @@ function ResultsContent() {
                   label="Symmetry"
                   value={contestant.scores.symmetry}
                   weight={0.25}
-                  icon="⚖️"
-                  color="emerald"
+                  icon="emerald"
                 />
                 <MetricBar
                   label="Wind Style"
@@ -284,18 +580,54 @@ function ResultsContent() {
 
         </div>
 
-        {/* Action Buttons */}
-        <div className="mt-8 pt-6 border-t border-emerald-950 flex flex-wrap items-center justify-between gap-4">
-          <Link
-            href="/judge"
-            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-serif font-bold text-xs transition-colors"
-          >
-            <span>Evaluate Another Coconut Palm</span>
-          </Link>
+        {/* Official Sovereign Certification Signatures Block */}
+        <div className="mt-10 pt-6 border-t border-emerald-950 grid grid-cols-1 sm:grid-cols-3 gap-6 items-center text-xs text-slate-400">
+          <div className="space-y-1">
+            <div className="font-serif font-bold text-white text-sm">Dr. K. Frondington</div>
+            <div className="text-[10px] font-mono text-emerald-400 uppercase">Chief Canopy Adjudicator</div>
+            <div className="text-[10px] text-slate-500">Department of Arboreal Geometry</div>
+          </div>
+
+          <div className="flex flex-col items-center justify-center text-center space-y-1">
+            <div className="w-12 h-12 rounded-full border-2 border-gold-400 flex items-center justify-center text-gold-300 text-lg font-serif font-black shadow-md">
+              👑
+            </div>
+            <div className="text-[9px] font-mono tracking-widest text-gold-400 uppercase font-bold">
+              THENGA ROYALE 2026
+            </div>
+            <div className="text-[9px] text-slate-500">Official High Commission Seal</div>
+          </div>
+
+          <div className="space-y-1 sm:text-right">
+            <div className="font-serif font-bold text-white text-sm">Prof. S. Chloroplast</div>
+            <div className="text-[10px] font-mono text-gold-400 uppercase">High Sovereign Registrar</div>
+            <div className="text-[10px] text-slate-500">International Coconut Council</div>
+          </div>
+        </div>
+
+        {/* Action Buttons in Footer (Hidden on Print) */}
+        <div className="no-print mt-8 pt-6 border-t border-emerald-950 flex flex-wrap items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center gap-3">
+            <Link
+              href="/judge"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-serif font-bold text-xs transition-colors shadow-md"
+            >
+              <span>Evaluate Another Palm 🌴</span>
+            </Link>
+
+            <button
+              onClick={handleDownloadCertificateImage}
+              disabled={isGeneratingImage}
+              className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-gradient-to-r from-gold-500 to-amber-400 hover:from-gold-400 hover:to-amber-300 text-slate-950 font-serif font-black text-xs uppercase tracking-wider transition-all shadow-md hover:scale-105"
+            >
+              <Download className="w-4 h-4" />
+              <span>Download Image (PNG)</span>
+            </button>
+          </div>
 
           <Link
             href="/leaderboard"
-            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-palace-900 hover:bg-palace-800 text-slate-200 border border-emerald-500/30 text-xs font-semibold transition-colors"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-palace-900 hover:bg-palace-850 text-slate-200 border border-emerald-500/30 text-xs font-semibold transition-colors"
           >
             <Trophy className="w-4 h-4 text-gold-400" />
             <span>Return to Global Leaderboard</span>
@@ -310,7 +642,7 @@ function ResultsContent() {
 
 export default function ResultsPage() {
   return (
-    <Suspense fallback={<div className="text-center py-20 text-slate-400">Loading Pageant Dossier...</div>}>
+    <Suspense fallback={<div className="text-center py-20 text-slate-400">Loading Sovereign Certificate...</div>}>
       <ResultsContent />
     </Suspense>
   );

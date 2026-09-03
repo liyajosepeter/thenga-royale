@@ -86,7 +86,7 @@ export function calculatePageantAwards(contestants: Contestant[]): PageantAwards
     if (b.scores.wind_style !== a.scores.wind_style) {
       return b.scores.wind_style - a.scores.wind_style;
     }
-    return a.id.localeCompare(b.id);
+    return String(a.id || a.name).localeCompare(String(b.id || b.name));
   });
 
   // Assign ranks
@@ -106,7 +106,7 @@ export function calculatePageantAwards(contestants: Contestant[]): PageantAwards
     if (b.scores.overall !== a.scores.overall) {
       return b.scores.overall - a.scores.overall;
     }
-    return a.id.localeCompare(b.id);
+    return String(a.id || a.name).localeCompare(String(b.id || b.name));
   });
   const symmetryKing = sortedBySymmetry[0];
   symmetryKing.awards = symmetryKing.awards || [];
@@ -122,7 +122,7 @@ export function calculatePageantAwards(contestants: Contestant[]): PageantAwards
     if (b.scores.overall !== a.scores.overall) {
       return b.scores.overall - a.scores.overall;
     }
-    return a.id.localeCompare(b.id);
+    return String(a.id || a.name).localeCompare(String(b.id || b.name));
   });
   const volumeKing = sortedByVolume[0];
   volumeKing.awards = volumeKing.awards || [];
@@ -138,7 +138,7 @@ export function calculatePageantAwards(contestants: Contestant[]): PageantAwards
     if (b.scores.overall !== a.scores.overall) {
       return b.scores.overall - a.scores.overall;
     }
-    return a.id.localeCompare(b.id);
+    return String(a.id || a.name).localeCompare(String(b.id || b.name));
   });
   const spreadKing = sortedBySpread[0];
   spreadKing.awards = spreadKing.awards || [];
@@ -154,7 +154,7 @@ export function calculatePageantAwards(contestants: Contestant[]): PageantAwards
     if (b.scores.overall !== a.scores.overall) {
       return b.scores.overall - a.scores.overall;
     }
-    return a.id.localeCompare(b.id);
+    return String(a.id || a.name).localeCompare(String(b.id || b.name));
   });
   const windKing = sortedByWind[0];
   windKing.awards = windKing.awards || [];

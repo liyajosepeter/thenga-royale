@@ -5,8 +5,8 @@
 @tailwind utilities;
 
 :root {
-  --background: #070c09;
-  --foreground: #f2f7f4;
+  --background: #07130E;
+  --foreground: #EDE9E1;
   --font-cinzel: 'Cinzel', serif;
   --font-outfit: 'Outfit', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
@@ -14,60 +14,123 @@
 
 body {
   color: var(--foreground);
-  background: radial-gradient(circle at 50% 0%, #11261b 0%, #080f0b 45%, #050806 100%);
+  background-color: #07130E;
+  background-image: 
+    radial-gradient(ellipse at 50% 0%, #0E271E 0%, #081812 50%, #050E0B 100%);
+  background-attachment: fixed;
   font-family: var(--font-outfit);
   min-height: 100vh;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Glassmorphism Luxury Utilities */
+/* Realistic Luxury Botanical Glass Panels */
 .glass-panel {
-  background: rgba(13, 24, 18, 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(52, 211, 153, 0.15);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  background: rgba(10, 26, 19, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(56, 178, 137, 0.16);
+  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.glass-panel:hover {
+  border-color: rgba(56, 178, 137, 0.28);
 }
 
 .glass-panel-gold {
-  background: rgba(28, 22, 10, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(250, 204, 21, 0.25);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(250, 204, 21, 0.2);
+  background: rgba(18, 22, 14, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(212, 175, 55, 0.32);
+  box-shadow: 0 18px 45px -10px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(230, 202, 133, 0.12);
 }
 
 .gold-gradient-text {
-  background: linear-gradient(135deg, #fff2aa 0%, #facc15 50%, #ca8a04 100%);
+  background: linear-gradient(135deg, #FFF0C2 0%, #E6CA85 45%, #C59E47 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .emerald-gradient-text {
-  background: linear-gradient(135deg, #a7f3d0 0%, #34d399 50%, #059669 100%);
+  background: linear-gradient(135deg, #C2F0DE 0%, #48C79B 50%, #1E7B5C 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .glow-emerald {
-  box-shadow: 0 0 35px -5px rgba(16, 185, 129, 0.35);
+  box-shadow: 0 4px 25px -4px rgba(30, 123, 92, 0.35);
 }
 
 .glow-gold {
-  box-shadow: 0 0 40px -5px rgba(250, 204, 21, 0.4);
+  box-shadow: 0 4px 28px -4px rgba(212, 175, 55, 0.3);
 }
 
-/* Custom Scrollbar */
+/* Refined Dark Botanical Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #070d09;
+  background: #050E0B;
 }
 ::-webkit-scrollbar-thumb {
-  background: #193829;
+  background: #143528;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #059669;
+  background: #205440;
+}
+
+/* Print Media Styles for Printable Sovereign Certificates */
+@media print {
+  body {
+    background: #FFFFFF !important;
+    background-image: none !important;
+    color: #111827 !important;
+  }
+
+  header, footer, nav, .no-print {
+    display: none !important;
+  }
+
+  main {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .printable-certificate {
+    background: #FFFFFF !important;
+    border: 3px double #C59E47 !important;
+    box-shadow: none !important;
+    color: #111827 !important;
+    padding: 32px !important;
+    margin: 0 auto !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .printable-certificate h1,
+  .printable-certificate h2,
+  .printable-certificate h3,
+  .printable-certificate strong {
+    color: #071E15 !important;
+  }
+
+  .printable-certificate .gold-gradient-text {
+    color: #B38E2A !important;
+    -webkit-text-fill-color: #B38E2A !important;
+  }
+
+  .printable-certificate .glass-panel,
+  .printable-certificate .glass-panel-gold {
+    background: #FAF8F5 !important;
+    border: 1px solid #E5D5AA !important;
+    color: #111827 !important;
+  }
+
+  .printable-certificate .text-slate-300,
+  .printable-certificate .text-slate-400 {
+    color: #374151 !important;
+  }
 }

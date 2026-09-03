@@ -274,7 +274,7 @@ def analyze_coconut_image(
     # STEP 5: Composite Score & Pageant Deliberation
     # -------------------------------------------------------------------------
     overall_score = calculate_overall_score(volume_score, spread_score, symmetry_score, wind_score)
-    hairstyle_title = assign_hairstyle_title(volume_score, spread_score, symmetry_score, wind_score, overall_score)
+    hairstyle_title = assign_hairstyle_title(volume_score, spread_score, symmetry_score, wind_score, overall_score, contestant_name)
 
     scores_dict = {
         "volume": volume_score,

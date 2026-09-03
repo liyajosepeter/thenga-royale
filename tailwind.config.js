@@ -11,28 +11,29 @@ module.exports = {
         background: 'var(--background)',
         foreground: 'var(--foreground)',
         palace: {
-          950: '#060a08',
-          900: '#0b1410',
-          800: '#11221b',
-          700: '#1b352a',
-          600: '#274b3d',
+          950: '#050E0B',
+          900: '#081711',
+          850: '#0B1E17',
+          800: '#0E271E',
+          700: '#15382B',
+          600: '#1E4D3B',
         },
         emerald: {
-          400: '#34d399',
-          500: '#10b981',
-          600: '#059669',
-          700: '#047857',
+          400: '#48C79B',
+          500: '#28A77B',
+          600: '#1E7B5C',
+          700: '#145A42',
         },
         gold: {
-          300: '#fde047',
-          400: '#facc15',
-          500: '#eab308',
-          600: '#ca8a04',
+          300: '#F5E2B3',
+          400: '#E6CA85',
+          500: '#D4AF37',
+          600: '#B38E2A',
         },
         husk: {
-          400: '#d97706',
-          500: '#b45309',
-          600: '#92400e',
+          400: '#D97706',
+          500: '#B45309',
+          600: '#92400E',
         }
       },
       fontFamily: {
@@ -48,7 +49,7 @@ module.exports = {
       keyframes: {
         float: {
           '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-10px)' },
+          '50%': { transform: 'translateY(-8px)' },
         },
         shimmer: {
           '0%': { backgroundPosition: '-200% 0' },
@@ -58,4 +59,4 @@ module.exports = {
     },
   },
   plugins: [],
-}
+};

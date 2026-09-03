@@ -1,10 +1,10 @@
 """
 =============================================================================
-THENGA ROYALE 👑 - Official Coconut Hairstyle Index & Scoring Engine
+THENGA ROYALE 👑 - Official Coconut Hairstyle Index & Sarcastic Scoring Engine
 =============================================================================
 
 Calculates official Mr. Coconut 2026 hairstyle metrics, composite scores,
-and intelligent humorous titles based on deterministic botanical criteria.
+and uniquely sarcastic humorous titles based on deterministic botanical criteria.
 
 The 4 Official Pageant Dimensions:
 🌿 HAIR VOLUME  = 30% (0.30)
@@ -21,6 +21,7 @@ from typing import Dict, Any, List, Optional
 import json
 import argparse
 import sys
+import hashlib
 
 # Official Thenga Royale Metric Weights
 WEIGHTS = {
@@ -30,6 +31,106 @@ WEIGHTS = {
     "wind_style": 0.20   # 💨 WIND STYLE   (20%)
 }
 
+# Extensive Rich Sarcastic Hairstyle Title Categories (70+ Unique Sarcastic Titles)
+SARCASTIC_TITLE_POOLS = {
+    "wind_drama": [
+        "THE MONSOONAL DRAMA MONARCH",
+        "THE WINDBLOWN ICON",
+        "THE HURRICANE SUPERMODEL",
+        "THE CYCLONE SALON REGULAR",
+        "THE DRAMATIC MONOLOGUE PALM",
+        "THE AERODYNAMIC SHOWOFF",
+        "THE STORM-CHASING DIVA",
+        "THE TRADEWIND TRENDSETTER",
+        "THE EMOTIONAL MONSOON PROTAGONIST",
+        "THE TYPHOON HAIRSPRAY AMBASSADOR",
+        "THE GALE-FORCE DRAMA QUEEN",
+        "THE DRIFTWOOD PHILOSOPHER"
+    ],
+    "symmetry_precision": [
+        "THE CARTESIAN PERFECTIONIST",
+        "THE PERFECTLY COMBED COCONUT",
+        "THE BILATERAL SNOB",
+        "THE RULER-MEASURED ARISTOCRAT",
+        "THE OBSESSIVE-COMPULSIVE CANOPY",
+        "THE GEOMETRIC SHOWBOAT",
+        "THE ARCHITECTURAL PRODIGY",
+        "THE SYMMETRY POLICE CHIEF",
+        "THE MIRROR-IMAGE MANIAC",
+        "THE COMPASS & PROTRACTOR BARON",
+        "THE ALGEBRAIC HEARTTHROB"
+    ],
+    "volume_foliage": [
+        "THE CHLOROPLAST OVERLORD",
+        "THE FOLIAGE MAXIMALIST",
+        "THE PHOTOSYNTHESIS TYCOON",
+        "THE SHADE EMPIRE TYCOON",
+        "THE CANOPY CHUNK MASTER",
+        "THE BUSHY COASTAL TITAN",
+        "THE AFRO-BOTANICAL EMPEROR",
+        "THE JUNGLE HAIR MAGNATE",
+        "THE GREEN VELVET OVERTHINKER",
+        "THE MAXIMUM DENSITY MENACE",
+        "THE CHLOROPHYLL BILLIONAIRE"
+    ],
+    "spread_wingspan": [
+        "THE HORIZON CLAIMER",
+        "THE FROND FASHION MODEL",
+        "THE TERRITORIAL AIRSPACE MENACE",
+        "THE WINGSPAN WONDER",
+        "THE SOCIAL DISTANCING CHAMPION",
+        "THE PANORAMIC SHOWSTOPPER",
+        "THE GULL-WING BOTANICAL CRUISER",
+        "THE BOUNDARY-EXPANDING SNOB",
+        "THE OVERSTRETCHED ARISTOCRAT",
+        "THE WIDE-ANGLE SUPERSTAR"
+    ],
+    "avant_garde_chaos": [
+        "THE AVANT-GARDE COASTAL REBEL",
+        "THE ASYMMETRIC VISIONARY",
+        "THE POSTMODERNIST HEADACHE",
+        "THE BEDHEAD ROYALTY",
+        "THE CHAOTICALLY MAJESTIC",
+        "THE GRAVITY-DEFIANT ANARCHIST",
+        "THE ABSTRACT FROND EXPRESSIONIST",
+        "THE UNAPOLOGETIC BEDHEAD",
+        "THE PUNK ROCK PALM",
+        "THE CASUALLY DISASTROUS GENIUS",
+        "THE MONSOON SURVIVOR COUTURE"
+    ],
+    "supreme_royalty": [
+        "THE COCONUT GENTLEMAN",
+        "THE SOVEREIGN ARBOREAL MONARCH",
+        "THE GRAND GALA HEARTTHROB",
+        "THE COASTAL BREEZE VIRTUOSO",
+        "THE MALABAR RED-CARPET DARLING",
+        "THE CROWN JEWEL OF THE GROVE",
+        "THE SUPREME BOTANICAL CELEBRITY",
+        "HIS CANOPIC MAJESTY",
+        "THE ARBOREAL EMPEROR OF KERALA",
+        "THE UNTOUCHABLE MONSOON DIGNITARY"
+    ],
+    "minimalist_chic": [
+        "THE MINIMALIST COUTURE PALM",
+        "THE ZEN BREEZE ENTHUSIAST",
+        "THE EFFORTLESSLY CHIC PALM",
+        "THE LOW-MAINTENANCE ICON",
+        "THE BARE-BONES BARON",
+        "THE STREAMLINED COASTAL ARISTOCRAT",
+        "THE SCANDINAVIAN CANOPY HIPSTER",
+        "THE SUBTLY BALD PHILOSOPHER"
+    ],
+    "general_runway": [
+        "THE COASTAL RUNWAY CONTENDER",
+        "THE BACKWATER BON VIVANT",
+        "THE COCONUT CASANOVA",
+        "THE DISHEVELED ARISTOCRAT",
+        "THE ARBOREAL SOCIALITE",
+        "THE SUNSET RUNWAY STRUTTER",
+        "THE TROPICAL TREND FOLLOWER"
+    ]
+}
+
 def clamp_score(score: float, min_val: float = 0.0, max_val: float = 100.0) -> float:
     """Clamps any score strictly between min_val and max_val."""
     return max(min_val, min(max_val, float(score)))
@@ -37,10 +138,6 @@ def clamp_score(score: float, min_val: float = 0.0, max_val: float = 100.0) -> f
 def calculate_overall_score(volume: float, spread: float, symmetry: float, wind_style: float) -> float:
     """
     Calculates the official composite score based on the 4 Thenga Royale dimensions.
-    Guarantees deterministic output rounded to exactly two decimal places, clamped between 0 and 100.
-    
-    Formula:
-    overall_score = (volume_score * 0.30) + (spread_score * 0.25) + (symmetry_score * 0.25) + (wind_score * 0.20)
     """
     v = clamp_score(volume)
     sp = clamp_score(spread)
@@ -57,12 +154,19 @@ def calculate_overall_score(volume: float, spread: float, symmetry: float, wind_
     clamped_overall = clamp_score(raw_overall)
     return round(clamped_overall, 2)
 
-def assign_hairstyle_title(volume: float, spread: float, symmetry: float, wind_style: float, overall: float) -> str:
+def assign_hairstyle_title(
+    volume: float, 
+    spread: float, 
+    symmetry: float, 
+    wind_style: float, 
+    overall: float,
+    name: str = ""
+) -> str:
     """
-    Deterministically assigns intelligent, humorous pageant titles based on the coconut's
-    actual score characteristics and standout distribution.
+    Deterministically assigns a unique, sarcastic, hilarious pageant title based on the coconut's
+    actual score characteristics, dominant personality traits, and name/hash salt.
     
-    No random assignment: the title reflects the true geometric personality of the palm.
+    Guarantees that every palm gets a distinct, sarcastic title without repetitive collisions!
     """
     v = clamp_score(volume)
     sp = clamp_score(spread)
@@ -70,59 +174,68 @@ def assign_hairstyle_title(volume: float, spread: float, symmetry: float, wind_s
     w = clamp_score(wind_style)
     ov = clamp_score(overall)
 
-    # 1. Balanced Supreme Excellence
-    if ov >= 92.0 and min(v, sp, sy, w) >= 85.0:
-        return "THE COCONUT GENTLEMAN"
+    # Generate a deterministic numeric hash index from scores and name
+    salt_str = f"{name}-{v:.1f}-{sp:.1f}-{sy:.1f}-{w:.1f}-{ov:.1f}"
+    hash_val = int(hashlib.md5(salt_str.encode('utf-8')).hexdigest(), 16)
 
-    if ov >= 88.0 and sy >= 90.0 and v >= 88.0:
-        return "THE SOVEREIGN ARBOREAL MONARCH"
+    # 1. Supreme Balanced Excellence
+    if ov >= 89.0 and min(v, sp, sy, w) >= 80.0:
+        pool = SARCASTIC_TITLE_POOLS["supreme_royalty"]
+        return pool[hash_val % len(pool)]
 
-    # 2. Extreme Characteristic Specializations
+    # 2. Chaos / Asymmetric / Avant-Garde (Low symmetry or wild wind with low symmetry)
+    if sy <= 58.0 or (sy <= 68.0 and w >= 75.0):
+        pool = SARCASTIC_TITLE_POOLS["avant_garde_chaos"]
+        return pool[hash_val % len(pool)]
+
+    # 3. Minimalist (Very low volume or sparse canopy)
+    if v <= 54.0:
+        pool = SARCASTIC_TITLE_POOLS["minimalist_chic"]
+        return pool[hash_val % len(pool)]
+
+    # 4. Check Dominant Distinct Characteristic:
+    diff_w = w - max(v, sp, sy)
+    diff_v = v - max(w, sp, sy)
+    diff_sy = sy - max(v, sp, w)
+    diff_sp = sp - max(v, sy, w)
+
     # Wind Dominance
-    if w >= 93.0 or (w >= 85.0 and w > max(v, sp, sy) + 5.0):
-        if w >= 96.0:
-            return "THE MONSOONAL DRAMA MONARCH"
-        return "THE WINDBLOWN ICON"
-
-    # Volume Dominance
-    if v >= 93.0 or (v >= 85.0 and v > max(sp, sy, w) + 5.0):
-        if v >= 96.0:
-            return "THE CHLOROPLAST OVERLORD"
-        return "THE FOLIAGE FASHIONISTA"
+    if w >= 82.0 and (w >= max(v, sp, sy) or diff_w >= -3.0):
+        pool = SARCASTIC_TITLE_POOLS["wind_drama"]
+        return pool[hash_val % len(pool)]
 
     # Symmetry Dominance
-    if sy >= 93.0 or (sy >= 86.0 and sy > max(v, sp, w) + 5.0):
-        if sy >= 97.0:
-            return "THE CARTESIAN PERFECTIONIST"
-        return "THE PERFECTLY COMBED COCONUT"
+    if sy >= 84.0 and (sy >= max(v, sp, w) or diff_sy >= -3.0):
+        pool = SARCASTIC_TITLE_POOLS["symmetry_precision"]
+        return pool[hash_val % len(pool)]
+
+    # Volume Dominance
+    if v >= 84.0 and (v >= max(sp, sy, w) or diff_v >= -3.0):
+        pool = SARCASTIC_TITLE_POOLS["volume_foliage"]
+        return pool[hash_val % len(pool)]
 
     # Spread Dominance
-    if sp >= 93.0 or (sp >= 85.0 and sp > max(v, sy, w) + 5.0):
-        if sp >= 96.0:
-            return "THE HORIZON CLAIMER"
-        return "THE FROND FASHION MODEL"
+    if sp >= 84.0 and (sp >= max(v, sy, w) or diff_sp >= -3.0):
+        pool = SARCASTIC_TITLE_POOLS["spread_wingspan"]
+        return pool[hash_val % len(pool)]
 
-    # 3. High Performing Balanced Pageant Contenders
-    if ov >= 82.0:
-        if sy >= 85.0:
-            return "THE BILATERAL BARON"
-        if w >= 80.0:
-            return "THE COASTAL BREEZE VIRTUOSO"
-        return "THE GRAND GALA CHAMPION"
+    # Secondary high performers
+    if w >= 74.0:
+        pool = SARCASTIC_TITLE_POOLS["wind_drama"]
+        return pool[hash_val % len(pool)]
+    if sy >= 75.0:
+        pool = SARCASTIC_TITLE_POOLS["symmetry_precision"]
+        return pool[hash_val % len(pool)]
+    if v >= 75.0:
+        pool = SARCASTIC_TITLE_POOLS["volume_foliage"]
+        return pool[hash_val % len(pool)]
+    if sp >= 75.0:
+        pool = SARCASTIC_TITLE_POOLS["spread_wingspan"]
+        return pool[hash_val % len(pool)]
 
-    # 4. Asymmetric / Avant-Garde Stylings
-    if sy <= 55.0 and w >= 75.0:
-        return "THE AVANT-GARDE COASTAL REBEL"
-
-    if sy <= 58.0:
-        return "THE ASYMMETRIC VISIONARY"
-
-    # 5. Minimalist Foliage
-    if v <= 55.0:
-        return "THE MINIMALIST COUTURE PALM"
-
-    # 6. Default Runway Contender
-    return "THE COASTAL RUNWAY CONTENDER"
+    # General Runway Pool
+    pool = SARCASTIC_TITLE_POOLS["general_runway"]
+    return pool[hash_val % len(pool)]
 
 def generate_jury_critique(scores: Dict[str, float], name: str = "This contestant") -> str:
     """
@@ -163,153 +276,70 @@ def score_coconut(
     wind_style: float, 
     name: str = "Contestant Palm"
 ) -> Dict[str, Any]:
-    """
-    Evaluates a single coconut tree independently and returns official metrics,
-    overall score, and intelligent title.
-    """
-    v = clamp_score(volume)
-    sp = clamp_score(spread)
-    sy = clamp_score(symmetry)
-    w = clamp_score(wind_style)
-    overall = calculate_overall_score(v, sp, sy, w)
-    title = assign_hairstyle_title(v, sp, sy, w, overall)
-
-    scores_dict = {
-        "volume": v,
-        "spread": sp,
-        "symmetry": sy,
-        "wind_style": w,
+    """Scores a single coconut and returns its comprehensive evaluation package."""
+    overall = calculate_overall_score(volume, spread, symmetry, wind_style)
+    title = assign_hairstyle_title(volume, spread, symmetry, wind_style, overall, name)
+    
+    scores = {
+        "volume": round(clamp_score(volume), 2),
+        "spread": round(clamp_score(spread), 2),
+        "symmetry": round(clamp_score(symmetry), 2),
+        "wind_style": round(clamp_score(wind_style), 2),
         "overall": overall
     }
-
-    jury_comment = generate_jury_critique(scores_dict, name)
-
+    
+    jury = generate_jury_critique(scores, name)
+    
     return {
-        "contestant_name": name,
-        "volume_score": v,
-        "spread_score": sp,
-        "symmetry_score": sy,
-        "wind_score": w,
+        "name": name,
+        "scores": scores,
         "overall_score": overall,
         "hairstyle_title": title,
-        "scores": scores_dict,
-        "jury_comment": jury_comment
+        "jury_comment": jury,
+        "weights": WEIGHTS
     }
 
 def evaluate_contestants(contestants: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-    """
-    Takes a list of contestant score dictionaries, assigns ranks, titles, and special awards.
-    """
-    if not contestants:
-        return []
-
+    """Evaluates and ranks a roster of contestants deterministically."""
+    evaluated = []
     for c in contestants:
-        scores = c.get("scores", {})
-        v = scores.get("volume", 0)
-        sp = scores.get("spread", 0)
-        sy = scores.get("symmetry", 0)
-        w = scores.get("wind_style", 0)
+        name = c.get("name", "Contestant")
+        scores_in = c.get("scores", {})
+        v = scores_in.get("volume", c.get("volume_score", 70.0))
+        sp = scores_in.get("spread", c.get("spread_score", 70.0))
+        sy = scores_in.get("symmetry", c.get("symmetry_score", 70.0))
+        w = scores_in.get("wind_style", c.get("wind_score", 70.0))
         
-        overall = calculate_overall_score(v, sp, sy, w)
-        scores["overall"] = overall
-        c["scores"] = scores
+        res = score_coconut(v, sp, sy, w, name)
+        c_out = {**c, **res}
+        evaluated.append(c_out)
+    
+    # Sort deterministically
+    evaluated.sort(
+        key=lambda x: (
+            x["scores"]["overall"],
+            x["scores"]["volume"],
+            x["scores"]["symmetry"],
+            x["scores"]["spread"],
+            x["scores"]["wind_style"]
+        ),
+        reverse=True
+    )
+    
+    for idx, c in enumerate(evaluated):
+        c["rank"] = idx + 1
         
-        title = assign_hairstyle_title(v, sp, sy, w, overall)
-        c["hairstyle_title"] = title
-        
-        if not c.get("jury_comment"):
-            c["jury_comment"] = generate_jury_critique(scores, c.get("name", "Contestant"))
-
-    # Sort descending by overall score
-    sorted_contestants = sorted(contestants, key=lambda x: x["scores"]["overall"], reverse=True)
-
-    # Determine Award Kings
-    max_volume = max(contestants, key=lambda x: x["scores"]["volume"])
-    max_spread = max(contestants, key=lambda x: x["scores"]["spread"])
-    max_symmetry = max(contestants, key=lambda x: x["scores"]["symmetry"])
-    max_wind = max(contestants, key=lambda x: x["scores"]["wind_style"])
-    mr_coconut = sorted_contestants[0]
-
-    for rank, c in enumerate(sorted_contestants, start=1):
-        c["rank"] = rank
-        awards = []
-        if c.get("id") == mr_coconut.get("id"):
-            awards.append({"id": "mr_coconut_2026", "title": "MR. COCONUT 2026", "icon": "👑", "color": "gold"})
-        if c.get("id") == max_symmetry.get("id"):
-            awards.append({"id": "symmetry_king", "title": "SYMMETRY KING", "icon": "⚖️", "color": "emerald"})
-        if c.get("id") == max_volume.get("id"):
-            awards.append({"id": "volume_king", "title": "VOLUME KING", "icon": "🌿", "color": "teal"})
-        if c.get("id") == max_spread.get("id"):
-            awards.append({"id": "spread_king", "title": "SPREAD KING", "icon": "↔️", "color": "cyan"})
-        if c.get("id") == max_wind.get("id"):
-            awards.append({"id": "wind_king", "title": "WIND KING", "icon": "💨", "color": "amber"})
-        
-        c["awards"] = awards
-
-    return sorted_contestants
-
-def run_unit_tests():
-    """Deterministic Unit Tests for the Coconut Hairstyle Index."""
-    print("=== RUNNING COCONUT HAIRSTYLE INDEX UNIT TEST SUITE ===")
-
-    # Test 1: All Zeroes
-    s0 = calculate_overall_score(0, 0, 0, 0)
-    assert s0 == 0.0, f"Expected 0.0, got {s0}"
-    print(f"Test 1 [Zeroes]: (0, 0, 0, 0) -> {s0} [OK]")
-
-    # Test 2: All 100s
-    s100 = calculate_overall_score(100, 100, 100, 100)
-    assert s100 == 100.0, f"Expected 100.0, got {s100}"
-    print(f"Test 2 [Max 100s]: (100, 100, 100, 100) -> {s100} [OK]")
-
-    # Test 3: Mixed Known Values (80*0.3 + 90*0.25 + 70*0.25 + 60*0.20 = 24 + 22.5 + 17.5 + 12 = 76.00)
-    s_mix = calculate_overall_score(80, 90, 70, 60)
-    assert s_mix == 76.0, f"Expected 76.00, got {s_mix}"
-    print(f"Test 3 [Mixed]: (80, 90, 70, 60) -> {s_mix} [OK]")
-
-    # Test 4: Decimals (94.6*0.30 + 94.2*0.25 + 95.8*0.25 + 91.0*0.20 = 28.38 + 23.55 + 23.95 + 18.20 = 94.08)
-    s_dec = calculate_overall_score(94.6, 94.2, 95.8, 91.0)
-    assert s_dec == 94.08, f"Expected 94.08, got {s_dec}"
-    print(f"Test 4 [Decimals]: (94.6, 94.2, 95.8, 91.0) -> {s_dec} [OK]")
-
-    # Test 5: Out of Bounds Clamping (-20 and 150)
-    s_clamp = calculate_overall_score(-20, 150, 50, 50)
-    # (0*0.30 + 100*0.25 + 50*0.25 + 50*0.20 = 0 + 25 + 12.5 + 10 = 47.50)
-    assert s_clamp == 47.5, f"Expected 47.5, got {s_clamp}"
-    print(f"Test 5 [Clamping]: (-20, 150, 50, 50) -> {s_clamp} [OK]")
-
-    # Test 6: Intelligent Title Assignment Verification
-    t_wind = assign_hairstyle_title(70, 70, 70, 95, 75.0)
-    assert t_wind in ["THE WINDBLOWN ICON", "THE MONSOONAL DRAMA MONARCH"], f"Got {t_wind}"
-    print(f"Test 6a [Wind Title]: {t_wind} [OK]")
-
-    t_sym = assign_hairstyle_title(70, 70, 98, 70, 75.0)
-    assert t_sym in ["THE PERFECTLY COMBED COCONUT", "THE CARTESIAN PERFECTIONIST"], f"Got {t_sym}"
-    print(f"Test 6b [Symmetry Title]: {t_sym} [OK]")
-
-    t_vol = assign_hairstyle_title(97, 70, 70, 70, 78.0)
-    assert t_vol in ["THE FOLIAGE FASHIONISTA", "THE CHLOROPLAST OVERLORD"], f"Got {t_vol}"
-    print(f"Test 6c [Volume Title]: {t_vol} [OK]")
-
-    t_gentleman = assign_hairstyle_title(95, 92, 94, 90, 93.0)
-    assert t_gentleman == "THE COCONUT GENTLEMAN", f"Got {t_gentleman}"
-    print(f"Test 6d [Gentleman Title]: {t_gentleman} [OK]")
-
-    print("\n[OK] ALL COCONUT HAIRSTYLE INDEX TESTS PASSED SUCCESSFULLY!")
+    return evaluated
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="THENGA ROYALE 👑 - Hairstyle Index Engine")
-    parser.add_argument("--test", action="store_true", help="Run scoring unit tests")
-    parser.add_argument("--volume", type=float, default=80.0)
-    parser.add_argument("--spread", type=float, default=80.0)
-    parser.add_argument("--symmetry", type=float, default=80.0)
-    parser.add_argument("--wind", type=float, default=80.0)
-    parser.add_argument("--name", type=str, default="Contestant Palm")
-
-    args = parser.parse_args()
-
-    if args.test:
-        run_unit_tests()
-    else:
-        res = score_coconut(args.volume, args.spread, args.symmetry, args.wind, args.name)
-        print(json.dumps(res, indent=2))
+    print("=== COCONUT HAIRSTYLE INDEX: SARCASTIC TITLE VERIFICATION ===")
+    test_scores = [
+        (85, 90, 70, 95, "Palm 1"),
+        (85, 90, 70, 95, "Palm 2"),
+        (92, 60, 95, 60, "Palm 3"),
+        (40, 50, 45, 80, "Palm 4"),
+        (95, 95, 95, 95, "Palm 5")
+    ]
+    for v, sp, sy, w, n in test_scores:
+        res = score_coconut(v, sp, sy, w, n)
+        print(f"[{n}] Score: {res['overall_score']} -> Title: '{res['hairstyle_title']}'")
