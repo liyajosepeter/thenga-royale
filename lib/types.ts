@@ -42,3 +42,14 @@ export interface Contestant {
   canopy_box?: ContourBBox;
   is_verified_cv?: boolean;
 }
+
+export interface UploadedCoconutItem {
+  id: string;
+  previewUrl: string;
+  name: string;
+  origin: string;
+  fileSize: number;
+  fileName: string;
+  fileType: string;
+  isSamplePreset?: boolean;
+}

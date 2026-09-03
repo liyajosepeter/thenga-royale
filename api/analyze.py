@@ -8,6 +8,7 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from python.image_analysis import analyze_coconut_image
+from python.scoring import evaluate_contestants
 
 class handler(BaseHTTPRequestHandler):
     def do_POST(self):
@@ -16,6 +17,26 @@ class handler(BaseHTTPRequestHandler):
             body = self.rfile.read(content_length)
             data = json.loads(body.decode('utf-8'))
             
+            # Check if this is a batch request or single request
+            if "items" in data and isinstance(data["items"], list):
+                results = []
+                for entry in data["items"]:
+                    name = entry.get("name", "Contestant")
+                    img_b64 = entry.get("image_base64", "")
+                    if img_b64:
+                        if "," in img_b64:
+                            img_b64 = img_b64.split(",", 1)[1]
+                        img_bytes = base64.b64decode(img_b64)
+                        analysis = analyze_coconut_image(img_bytes, name)
+                        results.append(analysis)
+                
+                self.send_response(200)
+                self.send_header('Content-type', 'application/json')
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "success", "results": results}).encode('utf-8'))
+                return
+
             image_b64 = data.get("image_base64", "")
             contestant_name = data.get("name", "Contestant")
             
