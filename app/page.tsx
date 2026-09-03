@@ -36,19 +36,6 @@ export default function HomePage() {
     });
   }, []);
 
-  // Interactive Live Score Simulator State for the Hero Section
-  const [simVolume, setSimVolume] = useState(94);
-  const [simSpread, setSimSpread] = useState(88);
-  const [simSymmetry, setSimSymmetry] = useState(96);
-  const [simWind, setSimWind] = useState(90);
-
-  const simOverall = Number((
-    simVolume * 0.30 +
-    simSpread * 0.25 +
-    simSymmetry * 0.25 +
-    simWind * 0.20
-  ).toFixed(1));
-
   return (
     <div className="space-y-24">
       
@@ -70,12 +57,18 @@ export default function HomePage() {
           <div className="text-xs sm:text-sm font-mono tracking-widest text-emerald-400 uppercase font-semibold">
             HIGH COMMISSION FOR ARBOREAL SPLENDOR PRESENTS
           </div>
-          <h1 className="font-serif text-5xl sm:text-7xl lg:text-8xl font-black tracking-tight leading-none">
-            <span className="gold-gradient-text block drop-shadow-lg">MR. COCONUT 2026</span>
+          <h1 className="font-serif text-5xl sm:text-7xl lg:text-8xl font-black tracking-tight leading-none group">
+            <span className="malayalam-hero-title gold-gradient-text block drop-shadow-2xl">
+              MR. തെങ്ങ് 2026
+            </span>
           </h1>
-          <h2 className="text-xl sm:text-3xl lg:text-4xl text-slate-200 font-serif font-bold tracking-wide">
-            WHO HAS THE BEST HAIRSTYLE IN THE COCONUT KINGDOM?
-          </h2>
+          <div className="pt-2">
+            <h2 className="malayalam-subtitle text-2xl sm:text-4xl lg:text-5xl font-bold text-ivory-100/95 tracking-normal">
+              <span className="text-gold-400/80 mr-2 font-serif text-xl sm:text-2xl select-none">✦</span>
+              <span>തെങ്ങിനും ഇത്തിരി സ്റ്റൈലൊക്കെ ആകാം</span>
+              <span className="text-gold-400/80 ml-2 font-serif text-xl sm:text-2xl select-none">✦</span>
+            </h2>
+          </div>
           <p className="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto italic font-sans">
             &ldquo;The world&apos;s most unnecessary coconut-tree evaluation protocol.&rdquo;
           </p>
@@ -98,109 +91,6 @@ export default function HomePage() {
           >
             <span>VIEW LEADERBOARD 🏆</span>
           </Link>
-        </div>
-
-        {/* Interactive Live Hairstyle Score Simulator Widget */}
-        <div className="max-w-4xl mx-auto mt-12 glass-panel p-6 sm:p-8 rounded-3xl border-emerald-500/20 text-left space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-emerald-950 pb-4">
-            <div>
-              <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-400">
-                Interactive CV Calibration Preview
-              </span>
-              <h3 className="font-serif font-bold text-lg sm:text-xl text-white">
-                Live Coconut Hairstyle Score Simulator
-              </h3>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-slate-400">Computed Output:</span>
-              <div className="px-3 py-1 rounded-xl bg-palace-950 border border-gold-500/40 font-serif text-lg font-black gold-gradient-text">
-                {simOverall} <span className="text-xs text-slate-400 font-normal">/ 100</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-medium text-slate-300 flex items-center gap-1.5">
-                  <span>🌿</span> <span>Hair Volume</span>
-                </span>
-                <span className="font-mono font-bold text-teal-400">{simVolume}% (×0.30)</span>
-              </div>
-              <input
-                type="range"
-                min="40"
-                max="100"
-                value={simVolume}
-                onChange={(e) => setSimVolume(Number(e.target.value))}
-                className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-teal-400"
-              />
-              <p className="text-[10px] text-slate-500">Chloroplast canopy thickness</p>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-medium text-slate-300 flex items-center gap-1.5">
-                  <span>↔️</span> <span>Hair Spread</span>
-                </span>
-                <span className="font-mono font-bold text-cyan-400">{simSpread}% (×0.25)</span>
-              </div>
-              <input
-                type="range"
-                min="40"
-                max="100"
-                value={simSpread}
-                onChange={(e) => setSimSpread(Number(e.target.value))}
-                className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-400"
-              />
-              <p className="text-[10px] text-slate-500">Canopy aspect ratio & span</p>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-medium text-slate-300 flex items-center gap-1.5">
-                  <span>⚖️</span> <span>Symmetry</span>
-                </span>
-                <span className="font-mono font-bold text-emerald-400">{simSymmetry}% (×0.25)</span>
-              </div>
-              <input
-                type="range"
-                min="40"
-                max="100"
-                value={simSymmetry}
-                onChange={(e) => setSimSymmetry(Number(e.target.value))}
-                className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-400"
-              />
-              <p className="text-[10px] text-slate-500">Bilateral trunk balance</p>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-medium text-slate-300 flex items-center gap-1.5">
-                  <span>💨</span> <span>Wind Style</span>
-                </span>
-                <span className="font-mono font-bold text-amber-400">{simWind}% (×0.20)</span>
-              </div>
-              <input
-                type="range"
-                min="40"
-                max="100"
-                value={simWind}
-                onChange={(e) => setSimWind(Number(e.target.value))}
-                className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-400"
-              />
-              <p className="text-[10px] text-slate-500">Monsoonal hairtoss drama</p>
-            </div>
-
-          </div>
-
-          <div className="pt-2 text-center text-xs text-slate-400 flex items-center justify-center gap-2">
-            <span className="text-emerald-400 font-semibold font-mono">Formula Applied:</span>
-            <code className="bg-palace-950 px-2 py-0.5 rounded border border-emerald-950 font-mono text-[11px] text-slate-300">
-              ({simVolume}×0.30) + ({simSpread}×0.25) + ({simSymmetry}×0.25) + ({simWind}×0.20) = {simOverall}
-            </code>
-          </div>
         </div>
       </section>
 
@@ -418,7 +308,7 @@ export default function HomePage() {
             <div className="text-2xl">👑</div>
             <h3 className="font-serif font-bold text-base gold-gradient-text">CROWN</h3>
             <p className="text-[11px] text-slate-300 leading-normal">
-              Bestows Mr. Coconut 2026 or Category King distinctions & official certificates.
+              Bestows Mr. തെങ്ങ് 2026 or Category King distinctions & official certificates.
             </p>
           </div>
 
@@ -498,7 +388,7 @@ export default function HomePage() {
       ) : (
         <section className="glass-panel-gold rounded-3xl p-8 sm:p-12 text-center space-y-4 border-gold-500/30">
           <span className="text-4xl">👑</span>
-          <h3 className="font-serif text-2xl font-black text-white">The Throne of Mr. Coconut 2026 is Empty</h3>
+          <h3 className="font-serif text-2xl font-black text-white">The Throne of Mr. തെങ്ങ് 2026 is Empty</h3>
           <p className="text-xs text-slate-300 max-w-md mx-auto">
             No contestants have been entered into the active flight roster. Upload coconut tree crown images to crown the next monarch.
           </p>

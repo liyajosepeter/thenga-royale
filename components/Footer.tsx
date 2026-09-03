@@ -1,9 +1,10 @@
 import React from 'react';
 import Link from 'next/link';
+import { Crown, Sparkles, ShieldCheck } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="border-t border-emerald-950 bg-palace-950/90 text-slate-400 py-12 mt-16">
+    <footer className="border-t border-emerald-900/40 bg-forest-950/90 text-sage-300 py-12 mt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           
@@ -14,27 +15,27 @@ export default function Footer() {
                 THENGA ROYALE 2026
               </span>
             </div>
-            <p className="text-sm text-slate-400 max-w-md leading-relaxed">
-              The premier arboreal beauty pageant dedicated to scientifically answering: <em>&ldquo;Which coconut tree has the most magnificent hairstyle?&rdquo;</em> Powered by Python and OpenCV.
+            <p className="text-sm text-sage-300/90 max-w-md leading-relaxed font-sans">
+              The premier arboreal beauty pageant dedicated to scientifically answering: <em>&ldquo;Which coconut tree has the most magnificent hairstyle?&rdquo;</em> Evaluated by Python and OpenCV computer vision.
             </p>
             <div className="flex items-center gap-3 pt-2">
-              <span className="px-2.5 py-1 rounded-md bg-slate-900 border border-slate-800 text-[11px] font-mono text-emerald-400">
+              <span className="px-2.5 py-1 rounded-lg bg-emerald-950/80 border border-emerald-500/25 text-[11px] font-mono text-emerald-300">
                 Python 3.13
               </span>
-              <span className="px-2.5 py-1 rounded-md bg-slate-900 border border-slate-800 text-[11px] font-mono text-emerald-400">
+              <span className="px-2.5 py-1 rounded-lg bg-emerald-950/80 border border-emerald-500/25 text-[11px] font-mono text-emerald-300">
                 OpenCV Headless
               </span>
-              <span className="px-2.5 py-1 rounded-md bg-slate-900 border border-slate-800 text-[11px] font-mono text-gold-400">
+              <span className="px-2.5 py-1 rounded-lg bg-emerald-950/80 border border-gold-500/30 text-[11px] font-mono text-gold-400">
                 Vercel Serverless
               </span>
             </div>
           </div>
 
           <div>
-            <h4 className="font-serif text-sm font-semibold text-slate-200 uppercase tracking-wider mb-3">
-              The 4 Dimensions
+            <h4 className="font-serif text-sm font-bold text-ivory-100 uppercase tracking-wider mb-3">
+              The 4 Judging Criteria
             </h4>
-            <ul className="space-y-2 text-xs text-slate-400">
+            <ul className="space-y-2 text-xs text-sage-300/80 font-sans">
               <li className="flex items-center gap-2">
                 <span>🌿</span> <span>Hair Volume (30%)</span>
               </li>
@@ -51,30 +52,33 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-serif text-sm font-semibold text-slate-200 uppercase tracking-wider mb-3">
+            <h4 className="font-serif text-sm font-bold text-ivory-100 uppercase tracking-wider mb-3">
               Pageant Chambers
             </h4>
-            <ul className="space-y-2 text-xs text-slate-400">
+            <ul className="space-y-2 text-xs text-sage-300/80 font-sans">
               <li>
-                <Link href="/" className="hover:text-emerald-400 transition-colors">Grand Hall</Link>
+                <Link href="/" className="hover:text-gold-300 transition-colors">Grand Hall</Link>
               </li>
               <li>
-                <Link href="/judge" className="hover:text-emerald-400 transition-colors">Jury & Appraisal Chamber</Link>
+                <Link href="/judge" className="hover:text-gold-300 transition-colors">Jury Deliberation Chamber</Link>
               </li>
               <li>
-                <Link href="/leaderboard" className="hover:text-emerald-400 transition-colors">Hall of Fame Leaderboard</Link>
+                <Link href="/awards" className="hover:text-gold-300 transition-colors">Coronation Gala 👑</Link>
               </li>
               <li>
-                <Link href="/results" className="hover:text-emerald-400 transition-colors">Contestant Dossier</Link>
+                <Link href="/leaderboard" className="hover:text-gold-300 transition-colors">The Royal Rankings</Link>
+              </li>
+              <li>
+                <Link href="/results" className="hover:text-gold-300 transition-colors">Official Dossier</Link>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="border-t border-emerald-950/60 pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-4">
+        <div className="border-t border-emerald-900/30 pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-sage-400 gap-4 font-sans">
           <p>© 2026 Thenga Royale High Commission for Arboreal Splendor. All fronds reserved.</p>
-          <p className="italic text-slate-400">
-            No coconuts were harmed during the computer vision contour extraction.
+          <p className="italic text-sage-400/80">
+            No coconuts were harmed during contour segmentation.
           </p>
         </div>
       </div>

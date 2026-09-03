@@ -1,23 +1,5 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/next"
-    },
-    {
-      "src": "api/*.py",
-      "use": "@vercel/python"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/health",
-      "dest": "api/health.py"
-    },
-    {
-      "src": "/api/analyze",
-      "dest": "api/analyze.py"
-    }
-  ]
+  "framework": "nextjs",
+  "buildCommand": "npm run build"
 }
+

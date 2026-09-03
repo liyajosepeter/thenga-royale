@@ -25,7 +25,7 @@ class handler(BaseHTTPRequestHandler):
         response = {
             "status": "healthy",
             "service": "THENGA ROYALE 👑 - Python CV Engine",
-            "competition": "Mr. Coconut 2026",
+            "competition": "Mr. തെങ്ങ് 2026",
             "python_version": sys.version,
             "opencv_version": cv2_version,
             "numpy_version": numpy_version,

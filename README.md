@@ -1,5 +1,5 @@
 # THENGA ROYALE 👑
-### *The Sovereign Arboreal Hairstyle Pageant — Mr. Coconut 2026*
+### *The Sovereign Arboreal Hairstyle Pageant — Mr. തെങ്ങ് 2026*
 
 > **"Which coconut tree has the best hairstyle?"**
 > A serious scientific research system + A luxury beauty pageant + An absolutely unnecessary coconut competition.
@@ -8,7 +8,7 @@
 
 ## 🌴 Core Concept & Pageant Metrics
 
-Every uploaded coconut tree crown image represents an independent contestant in the **Mr. Coconut 2026** competition. There are:
+Every uploaded coconut tree crown image represents an independent contestant in the **Mr. തെങ്ങ് 2026** competition. There are:
 - **NO user accounts**
 - **NO authentication / login**
 - **NO one-entry-per-person restrictions**
@@ -24,7 +24,7 @@ Every uploaded coconut tree crown image represents an independent contestant in 
 $$\text{Overall Score} = (\text{Volume} \times 0.30) + (\text{Spread} \times 0.25) + (\text{Symmetry} \times 0.25) + (\text{Wind Style} \times 0.20)$$
 
 ### 👑 Sovereign Awards
-- 👑 **MR. COCONUT 2026** — Highest Overall Composite Score
+- 👑 **MR. തെങ്ങ് 2026** — Highest Overall Composite Score
 - 🌿 **VOLUME KING** — Highest Volume Score
 - ↔️ **SPREAD KING** — Highest Spread Score
 - ⚖️ **SYMMETRY KING** — Highest Symmetry Score

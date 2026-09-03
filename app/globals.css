@@ -1,87 +1,211 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anek+Malayalam:wght@300;400;500;600;700;800;900&family=Gayathri:wght@100;400;700&family=Manjari:wght@100;400;700&family=Noto+Serif+Malayalam:wght@400;600;700;900&family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: #07130E;
+  --background: #04100B;
   --foreground: #EDE9E1;
   --font-cinzel: 'Cinzel', serif;
-  --font-outfit: 'Outfit', sans-serif;
+  --font-playfair: 'Playfair Display', Georgia, serif;
+  --font-jakarta: 'Plus Jakarta Sans', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
+  --font-malayalam: 'Gayathri', 'Anek Malayalam', 'Manjari', sans-serif;
+  --font-malayalam-serif: 'Noto Serif Malayalam', 'Gayathri', serif;
 }
 
 body {
   color: var(--foreground);
-  background-color: #07130E;
+  background-color: #04100B;
   background-image: 
-    radial-gradient(ellipse at 50% 0%, #0E271E 0%, #081812 50%, #050E0B 100%);
+    radial-gradient(ellipse at 50% -10%, #0E3327 0%, #071812 45%, #04100B 100%);
   background-attachment: fixed;
-  font-family: var(--font-outfit);
+  font-family: var(--font-jakarta);
   min-height: 100vh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Realistic Luxury Botanical Glass Panels */
+/* ==========================================================================
+   Malayalam Typography Enhancements & Hover Effects
+   ========================================================================== */
+
+.malayalam-hero-title {
+  font-family: var(--font-cinzel), var(--font-malayalam), serif;
+  transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-block;
+  cursor: default;
+}
+
+.malayalam-hero-title:hover {
+  transform: scale(1.03) translateY(-2px);
+  filter: drop-shadow(0 0 35px rgba(230, 202, 133, 0.65));
+}
+
+.malayalam-subtitle {
+  font-family: var(--font-malayalam), 'Gayathri', sans-serif;
+  letter-spacing: 0.02em;
+  transition: all 0.35s ease;
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+}
+
+.malayalam-subtitle:hover {
+  transform: scale(1.04) translateY(-3px);
+  color: #FFF5D6;
+  text-shadow: 0 0 30px rgba(56, 178, 137, 0.7), 0 0 15px rgba(212, 175, 55, 0.5);
+}
+
+.malayalam-subtitle::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #E6CA85, #38B289, #E6CA85, transparent);
+  transition: all 0.35s ease;
+  transform: translateX(-50%);
+  border-radius: 9999px;
+  opacity: 0;
+}
+
+.malayalam-subtitle:hover::after {
+  width: 80%;
+  opacity: 1;
+}
+
+
+/* ==========================================================================
+   Dark Green Glassmorphism Utilities
+   ========================================================================== */
+
 .glass-panel {
-  background: rgba(10, 26, 19, 0.82);
+  background: rgba(10, 38, 29, 0.72);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(56, 178, 137, 0.16);
-  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(56, 178, 137, 0.18);
+  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .glass-panel:hover {
-  border-color: rgba(56, 178, 137, 0.28);
+  border-color: rgba(56, 178, 137, 0.32);
+}
+
+.glass-panel-elevated {
+  background: rgba(14, 51, 39, 0.82);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(56, 178, 137, 0.28);
+  box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
 .glass-panel-gold {
-  background: rgba(18, 22, 14, 0.88);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(212, 175, 55, 0.32);
-  box-shadow: 0 18px 45px -10px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(230, 202, 133, 0.12);
+  background: rgba(22, 34, 22, 0.88);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(245, 226, 179, 0.2);
 }
 
+/* ==========================================================================
+   Typography & Metallic Text Gradients
+   ========================================================================== */
+
 .gold-gradient-text {
-  background: linear-gradient(135deg, #FFF0C2 0%, #E6CA85 45%, #C59E47 100%);
+  background: linear-gradient(135deg, #FFF5D6 0%, #E6CA85 45%, #C59E47 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .emerald-gradient-text {
-  background: linear-gradient(135deg, #C2F0DE 0%, #48C79B 50%, #1E7B5C 100%);
+  background: linear-gradient(135deg, #E3FAF0 0%, #58C9A3 50%, #1B5C47 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .glow-emerald {
-  box-shadow: 0 4px 25px -4px rgba(30, 123, 92, 0.35);
+  box-shadow: 0 6px 30px -4px rgba(40, 139, 107, 0.4);
 }
 
 .glow-gold {
-  box-shadow: 0 4px 28px -4px rgba(212, 175, 55, 0.3);
+  box-shadow: 0 6px 35px -4px rgba(212, 175, 55, 0.35);
 }
 
-/* Refined Dark Botanical Scrollbar */
+/* Pageant Official Ribbon Sash */
+.pageant-sash {
+  background: linear-gradient(135deg, #E6CA85 0%, #D4AF37 50%, #B38E2A 100%);
+  color: #04100B;
+  font-family: var(--font-cinzel);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+
+.btn-glass-primary {
+  background: linear-gradient(135deg, #1B5C47 0%, #288B6B 50%, #1B5C47 100%);
+  border: 1px solid rgba(88, 201, 163, 0.4);
+  color: #FDFCF9;
+  font-family: var(--font-cinzel);
+  font-weight: 700;
+  transition: all 0.25s ease;
+  box-shadow: 0 8px 25px -4px rgba(6, 28, 20, 0.6);
+}
+
+.btn-glass-primary:hover {
+  background: linear-gradient(135deg, #288B6B 0%, #38B289 50%, #288B6B 100%);
+  border-color: rgba(88, 201, 163, 0.7);
+  box-shadow: 0 10px 30px -2px rgba(40, 139, 107, 0.5);
+  transform: translateY(-2px);
+}
+
+.btn-glass-gold {
+  background: linear-gradient(135deg, #D4AF37 0%, #E6CA85 50%, #C59E47 100%);
+  border: 1px solid rgba(245, 226, 179, 0.6);
+  color: #04100B;
+  font-family: var(--font-cinzel);
+  font-weight: 800;
+  transition: all 0.25s ease;
+  box-shadow: 0 8px 25px -4px rgba(140, 108, 27, 0.45);
+}
+
+.btn-glass-gold:hover {
+  background: linear-gradient(135deg, #E6CA85 0%, #FFF5D6 50%, #D4AF37 100%);
+  border-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 12px 35px -2px rgba(212, 175, 55, 0.6);
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   Custom Scrollbar
+   ========================================================================== */
+
 ::-webkit-scrollbar {
   width: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #050E0B;
+  background: #04100B;
 }
 ::-webkit-scrollbar-thumb {
-  background: #143528;
+  background: #0E3327;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #205440;
+  background: #1B5C47;
 }
 
-/* Print Media Styles for Printable Sovereign Certificates */
+/* ==========================================================================
+   Print Styles for Official Diplomas
+   ========================================================================== */
+
 @media print {
   body {
     background: #FFFFFF !important;
@@ -114,7 +238,7 @@ body {
   .printable-certificate h2,
   .printable-certificate h3,
   .printable-certificate strong {
-    color: #071E15 !important;
+    color: #04100B !important;
   }
 
   .printable-certificate .gold-gradient-text {
@@ -133,4 +257,44 @@ body {
   .printable-certificate .text-slate-400 {
     color: #374151 !important;
   }
+}
+
+/* ==========================================================================
+   Coronation Interactive Animations
+   ========================================================================== */
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) scale(0.8);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(-20vh) scale(1.1);
+  }
+  80% {
+    opacity: 0.9;
+    transform: translateY(-70vh) scale(1.2);
+  }
+  100% {
+    transform: translateY(-90vh) scale(1.3);
+    opacity: 0;
+  }
+}
+
+@keyframes bounceGentle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-float-up {
+  animation: floatUp 2.2s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+}
+
+.animate-bounce-gentle {
+  animation: bounceGentle 3s ease-in-out infinite;
 }

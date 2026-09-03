@@ -3,7 +3,7 @@ import { Contestant, PageantAward, AwardType } from './types';
 export const PAGEANT_AWARDS_DEF: Record<AwardType, PageantAward> = {
   mr_coconut_2026: {
     id: 'mr_coconut_2026',
-    title: '👑 MR. COCONUT 2026',
+    title: '👑 MR. തെങ്ങ് 2026',
     icon: '👑',
     color: 'gold',
     description: 'Supreme Pageant Champion — Highest Composite Hairstyle Index'
@@ -49,7 +49,7 @@ export interface PageantAwardsResult {
 
 /**
  * Deterministically calculates all pageant titles and category kings.
- * A single coconut can win both Mr. Coconut 2026 and any/all Category King titles.
+ * A single coconut can win both Mr. തെങ്ങ് 2026 and any/all Category King titles.
  */
 export function calculatePageantAwards(contestants: Contestant[]): PageantAwardsResult {
   if (!contestants || contestants.length === 0) {
@@ -69,7 +69,7 @@ export function calculatePageantAwards(contestants: Contestant[]): PageantAwards
     awards: []
   }));
 
-  // 1. Determine MR. COCONUT 2026 (Highest Overall Score with deterministic tie-breaker)
+  // 1. Determine MR. തെങ്ങ് 2026 (Highest Overall Score with deterministic tie-breaker)
   const sortedByOverall = [...cloned].sort((a, b) => {
     if (b.scores.overall !== a.scores.overall) {
       return b.scores.overall - a.scores.overall;

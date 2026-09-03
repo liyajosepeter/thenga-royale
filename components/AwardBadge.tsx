@@ -14,16 +14,16 @@ export default function AwardBadge({ award, size = 'md' }: AwardBadgeProps) {
   };
 
   const colorStyles = {
-    gold: 'bg-gradient-to-r from-champagne-200/90 to-champagne-300/80 border-champagne-500/60 text-tropical-950 shadow-sm shadow-champagne-500/20 font-bold',
-    emerald: 'bg-gradient-to-r from-tropical-100 to-tropical-200/80 border-tropical-600/40 text-tropical-950 shadow-sm font-semibold',
-    teal: 'bg-gradient-to-r from-teal-50 to-teal-100/90 border-teal-500/40 text-teal-950 shadow-sm font-semibold',
-    cyan: 'bg-gradient-to-r from-cyan-50 to-cyan-100/90 border-cyan-500/40 text-cyan-950 shadow-sm font-semibold',
-    amber: 'bg-gradient-to-r from-amber-50 to-amber-100/90 border-amber-500/40 text-amber-950 shadow-sm font-semibold',
+    gold: 'bg-gradient-to-r from-gold-500/20 via-gold-400/25 to-gold-500/20 border-gold-400/60 text-gold-300 shadow-md shadow-gold-500/20 font-bold',
+    emerald: 'bg-gradient-to-r from-emerald-600/25 to-emerald-500/20 border-emerald-400/50 text-mint-200 shadow-md font-semibold',
+    teal: 'bg-gradient-to-r from-teal-600/25 to-teal-500/20 border-teal-400/50 text-teal-200 shadow-md font-semibold',
+    cyan: 'bg-gradient-to-r from-mint-500/25 to-mint-400/20 border-mint-400/50 text-mint-200 shadow-md font-semibold',
+    amber: 'bg-gradient-to-r from-amber-600/25 to-gold-500/20 border-amber-400/50 text-amber-200 shadow-md font-semibold',
   };
 
   return (
     <span
-      className={`inline-flex items-center rounded-full font-serif border backdrop-blur-md transition-all duration-300 hover:scale-105 ${sizeClasses[size]} ${colorStyles[award.color] || colorStyles.gold}`}
+      className={`inline-flex items-center rounded-full font-serif font-malayalam border backdrop-blur-md transition-all duration-300 hover:scale-105 ${sizeClasses[size]} ${colorStyles[award.color] || colorStyles.gold}`}
       title={award.description || award.title}
     >
       <span className="text-sm select-none">{award.icon}</span>

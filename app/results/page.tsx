@@ -22,7 +22,8 @@ import {
   Award,
   Calendar,
   CheckCircle2,
-  RefreshCw
+  RefreshCw,
+  ArrowUpRight
 } from 'lucide-react';
 
 function ResultsContent() {
@@ -86,9 +87,9 @@ function ResultsContent() {
 
       // 1. Background Gradient (Deep Botanical Forest Green)
       const bgGrad = ctx.createRadialGradient(width / 2, height / 3, 50, width / 2, height / 2, 700);
-      bgGrad.addColorStop(0, '#0E271E');
-      bgGrad.addColorStop(0.5, '#081812');
-      bgGrad.addColorStop(1, '#050E0B');
+      bgGrad.addColorStop(0, '#0E3327');
+      bgGrad.addColorStop(0.5, '#071812');
+      bgGrad.addColorStop(1, '#04100B');
       ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, width, height);
 
@@ -105,15 +106,15 @@ function ResultsContent() {
       ctx.fillStyle = '#E6CA85';
       ctx.font = 'bold 13px "Courier New", monospace';
       ctx.textAlign = 'center';
-      ctx.fillText('👑 THE HIGH COMMISSION FOR ARBOREAL SPLENDOR • THENGA ROYALE 2026 👑', width / 2, 60);
+      ctx.fillText('👑 HIGH COMMISSION FOR ARBOREAL SPLENDOR • THENGA ROYALE 2026 👑', width / 2, 60);
 
       ctx.fillStyle = '#FFFFFF';
       ctx.font = 'bold 36px Georgia, serif';
-      ctx.fillText('OFFICIAL CERTIFICATE OF ARBOREAL SPLENDOR', width / 2, 105);
+      ctx.fillText('OFFICIAL ARBOREAL JUDGING CARD', width / 2, 105);
 
       ctx.fillStyle = '#38B289';
       ctx.font = '13px "Courier New", monospace';
-      ctx.fillText('CERTIFIED BY PYTHON & OPENCV COMPUTER VISION PROTOCOL', width / 2, 130);
+      ctx.fillText('AUTHENTICATED VIA PYTHON & OPENCV COMPUTER VISION', width / 2, 130);
 
       // 4. Horizontal Separator
       ctx.strokeStyle = 'rgba(212, 175, 55, 0.4)';
@@ -130,7 +131,7 @@ function ResultsContent() {
       const photoY = 175;
 
       // Draw photo container background & border
-      ctx.fillStyle = '#050E0B';
+      ctx.fillStyle = '#04100B';
       ctx.fillRect(photoX, photoY, photoWidth, photoHeight);
       ctx.strokeStyle = '#D4AF37';
       ctx.lineWidth = 2;
@@ -160,7 +161,7 @@ function ResultsContent() {
       // Overlay on photo: Rank Tag
       ctx.fillStyle = '#D4AF37';
       ctx.fillRect(photoX + 12, photoY + 12, 110, 26);
-      ctx.fillStyle = '#050E0B';
+      ctx.fillStyle = '#04100B';
       ctx.font = 'bold 12px Georgia, serif';
       ctx.textAlign = 'center';
       ctx.fillText(`RANK #${contestant.rank || 1}`, photoX + 67, photoY + 29);
@@ -171,7 +172,7 @@ function ResultsContent() {
 
       // Hairstyle Title Badge
       if (contestant.hairstyle_title) {
-        ctx.fillStyle = '#1A3326';
+        ctx.fillStyle = '#0A261D';
         ctx.fillRect(infoX, 175, 580, 28);
         ctx.strokeStyle = '#D4AF37';
         ctx.lineWidth = 1;
@@ -193,17 +194,17 @@ function ResultsContent() {
       ctx.fillText(`📍 Grove Origin: ${contestant.origin || 'Coastal Grove, Kerala'}`, infoX, 265);
 
       // Composite Rating Pill
-      ctx.fillStyle = '#112217';
+      ctx.fillStyle = '#071812';
       ctx.fillRect(infoX, 285, 260, 48);
       ctx.strokeStyle = '#D4AF37';
       ctx.strokeRect(infoX, 285, 260, 48);
 
       ctx.fillStyle = '#E6CA85';
       ctx.font = 'bold 11px monospace';
-      ctx.fillText('FINAL COMPOSITE RATING:', infoX + 14, 305);
+      ctx.fillText('HAIRSTYLE SCORE:', infoX + 14, 305);
       ctx.fillStyle = '#FFFFFF';
       ctx.font = 'bold 20px Georgia, serif';
-      ctx.fillText(`${contestant.scores.overall.toFixed(1)} / 100`, infoX + 14, 326);
+      ctx.fillText(`${contestant.scores.overall.toFixed(2)} / 100`, infoX + 14, 326);
 
       // 7. 4 Dimensions Meter Bars
       const barsY = 355;
@@ -227,29 +228,29 @@ function ResultsContent() {
         ctx.textAlign = 'left';
 
         // Track
-        ctx.fillStyle = '#0F261C';
+        ctx.fillStyle = '#061C14';
         ctx.fillRect(infoX, rowY + 20, 580, 8);
 
         // Fill
-        ctx.fillStyle = '#28A77B';
+        ctx.fillStyle = '#38B289';
         const fillW = Math.min((m.score / 100) * 580, 580);
         ctx.fillRect(infoX, rowY + 20, fillW, 8);
       });
 
       // 8. Jury Proclamation Box (Lower center)
       const commY = 560;
-      ctx.fillStyle = '#081711';
+      ctx.fillStyle = '#061C14';
       ctx.fillRect(60, commY, width - 120, 85);
       ctx.strokeStyle = 'rgba(56, 178, 137, 0.3)';
       ctx.strokeRect(60, commY, width - 120, 85);
 
       ctx.fillStyle = '#E6CA85';
       ctx.font = 'bold 12px Georgia, serif';
-      ctx.fillText('📜 OFFICIAL JURY CONCLAVE PROCLAMATION:', 80, commY + 26);
+      ctx.fillText('📜 OFFICIAL JURY VERDICT:', 80, commY + 26);
 
       ctx.fillStyle = '#E5E7EB';
       ctx.font = 'italic 13px Georgia, serif';
-      const comment = contestant.jury_comment || `${contestant.name} demonstrates certified canopy equilibrium and commanding botanical poise on the 2026 runway.`;
+      const comment = contestant.jury_comment || `${contestant.name} demonstrates exceptional crown spread with remarkable wind discipline.`;
       ctx.fillText(`“${comment.length > 120 ? comment.substring(0, 117) + '...' : comment}”`, 80, commY + 54);
 
       // 9. Bottom Signatory Blocks & High Commission Gold Seal
@@ -295,7 +296,7 @@ function ResultsContent() {
       // 10. Trigger Instant PNG Download
       const safeName = contestant.name.replace(/[^a-zA-Z0-9]/g, '_');
       const link = document.createElement('a');
-      link.download = `Thenga_Royale_Certificate_${safeName}.png`;
+      link.download = `Thenga_Royale_Judging_Card_${safeName}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
 
@@ -311,7 +312,7 @@ function ResultsContent() {
     return (
       <div className="glass-panel p-16 rounded-3xl text-center space-y-4 max-w-md mx-auto">
         <div className="w-8 h-8 border-2 border-gold-400 border-t-transparent rounded-full animate-spin mx-auto" />
-        <h3 className="font-serif text-lg font-bold text-white">Retrieving Sovereign Certificate...</h3>
+        <h3 className="font-serif text-lg font-bold text-white">Retrieving Judging Card...</h3>
       </div>
     );
   }
@@ -321,12 +322,12 @@ function ResultsContent() {
       <div className="glass-panel-gold p-12 rounded-3xl text-center space-y-4 max-w-xl mx-auto border-gold-400/40">
         <span className="text-4xl">🌴</span>
         <h2 className="font-serif font-bold text-2xl text-white">No Evaluated Dossier Found</h2>
-        <p className="text-xs text-slate-300">
+        <p className="text-xs text-sage-300 font-sans">
           Upload and analyze coconut tree images in the Jury Chamber to generate an official certificate.
         </p>
         <Link
           href="/judge"
-          className="inline-flex items-center gap-2 py-3 px-6 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs"
+          className="btn-glass-primary inline-flex items-center gap-2 py-3 px-6 rounded-2xl text-xs uppercase"
         >
           <span>Go to Jury Chamber 🌴</span>
         </Link>
@@ -340,13 +341,13 @@ function ResultsContent() {
     <div className="space-y-8 max-w-5xl mx-auto">
       
       {/* Top Breadcrumb & Controls (Hidden on Print) */}
-      <div className="no-print flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-emerald-950/60 pb-4">
+      <div className="no-print flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-emerald-900/40 pb-4">
         <Link
           href="/leaderboard"
-          className="flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-emerald-400 transition-colors"
+          className="flex items-center gap-2 text-xs font-serif font-bold text-sage-300 hover:text-gold-300 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Back to Sovereign Leaderboard</span>
+          <span>Back to The Royal Rankings</span>
         </Link>
 
         <div className="flex flex-wrap items-center gap-2.5">
@@ -354,8 +355,8 @@ function ResultsContent() {
             onClick={() => setShowCVOverlay(!showCVOverlay)}
             className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-medium transition-all ${
               showCVOverlay
-                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                : 'bg-palace-900 text-slate-400 border border-slate-700 hover:text-white'
+                ? 'bg-emerald-600/30 text-mint-200 border border-emerald-400/40'
+                : 'bg-forest-950 text-sage-400 border border-emerald-900/40 hover:text-white'
             }`}
           >
             <Layers className="w-3.5 h-3.5" />
@@ -364,7 +365,7 @@ function ResultsContent() {
 
           <button
             onClick={handleCopyLink}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-palace-900 hover:bg-palace-850 text-slate-300 border border-slate-700 text-xs font-medium transition-colors shadow-sm"
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-forest-950 hover:bg-forest-900 text-sage-300 border border-emerald-500/30 text-xs font-medium transition-colors shadow-sm"
           >
             {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Share2 className="w-3.5 h-3.5" />}
             <span>{copied ? 'Link Copied!' : 'Share Dossier'}</span>
@@ -375,7 +376,7 @@ function ResultsContent() {
             id="download-certificate-button"
             disabled={isGeneratingImage}
             onClick={handleDownloadCertificateImage}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-gold-500 via-amber-400 to-gold-500 hover:from-gold-400 hover:to-amber-300 text-slate-950 font-serif font-black text-xs uppercase tracking-wider transition-all duration-200 shadow-xl hover:scale-105 active:scale-95 border border-gold-300 disabled:opacity-50 cursor-pointer"
+            className="btn-glass-gold flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs uppercase tracking-wider transition-all shadow-xl hover:scale-105 disabled:opacity-50 cursor-pointer"
           >
             {isGeneratingImage ? (
               <>
@@ -394,27 +395,27 @@ function ResultsContent() {
           <button
             onClick={handlePrint}
             title="Print or Save as PDF"
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-palace-900 hover:bg-palace-850 text-slate-300 border border-slate-700 text-xs font-medium transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-forest-950 hover:bg-forest-900 text-sage-300 border border-emerald-500/30 text-xs font-medium transition-colors"
           >
             <Printer className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>
 
-      {/* Printable Sovereign Pageant Certificate */}
+      {/* Official Pageant Judging Card */}
       <div
         className={`printable-certificate rounded-3xl p-6 sm:p-10 relative overflow-hidden transition-all duration-300 ${
           isWinner
-            ? 'glass-panel-gold glow-gold border-gold-400/60'
-            : 'glass-panel border-emerald-500/40'
+            ? 'glass-panel-gold glow-gold border-gold-400/70 shadow-2xl'
+            : 'glass-panel border-emerald-500/40 shadow-xl'
         }`}
       >
         {/* Certificate Header Banner */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-emerald-950 pb-6 gap-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-emerald-900/40 pb-6 gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-widest text-gold-400">
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span>Official Sovereign Certificate of Arboreal Splendor</span>
+              <span>Official Arboreal Judging Card</span>
             </div>
             <div className="flex flex-wrap items-center gap-3 mt-1">
               <h1 className="font-serif text-3xl sm:text-4xl font-extrabold text-white">
@@ -428,7 +429,7 @@ function ResultsContent() {
               )}
             </div>
             {contestant.origin && (
-              <div className="flex items-center gap-1.5 text-xs text-slate-400 mt-1">
+              <div className="flex items-center gap-1.5 text-xs text-sage-300 mt-1">
                 <MapPin className="w-3.5 h-3.5 text-emerald-400" />
                 <span>Grove Origin: {contestant.origin}</span>
               </div>
@@ -437,18 +438,18 @@ function ResultsContent() {
 
           <div className="flex items-center gap-4 flex-shrink-0">
             <div className="text-right">
-              <div className="text-[10px] uppercase text-slate-400 font-mono tracking-wider">Composite Score</div>
+              <div className="text-[10px] uppercase text-sage-400 font-mono tracking-wider">HAIRSTYLE SCORE</div>
               <div className="font-serif text-4xl font-black gold-gradient-text">
-                {contestant.scores.overall.toFixed(1)}
-                <span className="text-sm font-normal text-slate-400 ml-1">/ 100</span>
+                {contestant.scores.overall.toFixed(2)}
+                <span className="text-sm font-normal text-sage-400 ml-1 font-mono">/ 100</span>
               </div>
             </div>
             {contestant.rank && (
               <div
                 className={`w-14 h-14 rounded-2xl flex flex-col items-center justify-center font-serif font-black shadow-xl ${
                   contestant.rank === 1
-                    ? 'bg-gradient-to-br from-gold-400 to-amber-500 text-slate-950 glow-gold'
-                    : 'bg-emerald-950 border border-emerald-500/40 text-emerald-300'
+                    ? 'bg-gradient-to-br from-gold-400 to-amber-500 text-forest-950 glow-gold'
+                    : 'bg-forest-950 border border-emerald-500/40 text-mint-300'
                 }`}
               >
                 <span className="text-[10px] uppercase font-sans">Rank</span>
@@ -461,7 +462,7 @@ function ResultsContent() {
         {/* Awards Conferred Badges */}
         {contestant.awards && contestant.awards.length > 0 && (
           <div className="pt-6 flex flex-wrap gap-2.5 items-center">
-            <span className="text-xs text-slate-400 font-semibold font-serif">Conferred Pageant Honors:</span>
+            <span className="text-xs text-sage-400 font-serif font-semibold">Conferred Pageant Honors:</span>
             {contestant.awards.map((award) => (
               <AwardBadge key={award.id} award={award} size="lg" />
             ))}
@@ -473,13 +474,13 @@ function ResultsContent() {
           
           {/* Photo with CV Overlay */}
           <div className="lg:col-span-6 space-y-3">
-            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl border border-slate-700 bg-slate-950">
+            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl border border-emerald-500/30 bg-forest-950">
               <img
                 src={contestant.image_url}
                 alt={contestant.name}
                 className="w-full h-full object-cover"
                 onError={(e) => {
-                  (e.target as HTMLImageElement).src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%230a101d'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='32' fill='%2310b981'%3E🌴%3C/text%3E%3C/svg%3E";
+                  (e.target as HTMLImageElement).src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%2304100b'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='32' fill='%2338b289'%3E🌴%3C/text%3E%3C/svg%3E";
                 }}
               />
 
@@ -487,7 +488,7 @@ function ResultsContent() {
               {showCVOverlay && (
                 <div className="absolute inset-0 pointer-events-none">
                   <div
-                    className="absolute border-2 border-emerald-400/80 rounded-lg bg-emerald-500/10 shadow-[0_0_15px_rgba(52,211,153,0.3)]"
+                    className="absolute border-2 border-emerald-400/80 rounded-lg bg-emerald-500/10 shadow-[0_0_15px_rgba(56,178,137,0.3)]"
                     style={{
                       left: '12%',
                       top: '12%',
@@ -495,13 +496,13 @@ function ResultsContent() {
                       height: '74%',
                     }}
                   >
-                    <div className="absolute -top-3 left-2 px-1.5 py-0.5 rounded bg-palace-950 border border-emerald-400 text-[9px] font-mono text-emerald-300">
+                    <div className="absolute -top-3 left-2 px-1.5 py-0.5 rounded bg-forest-950 border border-emerald-400 text-[9px] font-mono text-emerald-300">
                       Canopy Convex Hull [OpenCV]
                     </div>
                   </div>
 
-                  <div className="absolute left-1/2 top-4 bottom-4 w-0.5 bg-dashed border-l border-gold-400/70 shadow-[0_0_8px_rgba(250,204,21,0.6)]">
-                    <div className="absolute -top-2 -left-6 px-1 py-0.5 rounded bg-palace-950 border border-gold-400 text-[8px] font-mono text-gold-300">
+                  <div className="absolute left-1/2 top-4 bottom-4 w-0.5 bg-dashed border-l border-gold-400/70 shadow-[0_0_8px_rgba(212,175,55,0.6)]">
+                    <div className="absolute -top-2 -left-6 px-1 py-0.5 rounded bg-forest-950 border border-gold-400 text-[8px] font-mono text-gold-300">
                       Center Axis
                     </div>
                   </div>
@@ -509,9 +510,9 @@ function ResultsContent() {
               )}
             </div>
 
-            <div className="flex items-center justify-between text-[11px] text-slate-400 px-1 font-mono">
+            <div className="flex items-center justify-between text-[11px] text-sage-400 px-1 font-mono">
               <span>Segmented Canopy Pixels: ~{contestant.frond_pixel_count?.toLocaleString() || '42,800'} px</span>
-              <span className="text-emerald-400 flex items-center gap-1">
+              <span className="text-emerald-300 flex items-center gap-1">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>Python & OpenCV Calibrated</span>
               </span>
@@ -524,7 +525,7 @@ function ResultsContent() {
             <div className="glass-panel p-5 rounded-2xl space-y-4">
               <h3 className="font-serif font-bold text-base text-white flex items-center justify-between">
                 <span>The 4 Hairstyle Dimensions</span>
-                <span className="text-xs font-mono text-slate-400 font-normal">Weight Calibrated</span>
+                <span className="text-xs font-mono text-sage-400 font-normal">Weight Calibrated</span>
               </h3>
 
               <div className="space-y-3.5">
@@ -558,22 +559,22 @@ function ResultsContent() {
               </div>
             </div>
 
-            {/* Scientific Jury Commentary */}
-            <div className="p-4 rounded-2xl bg-palace-900/80 border border-emerald-950 space-y-2">
-              <div className="flex items-center gap-1.5 text-xs uppercase tracking-wider text-gold-400 font-semibold font-serif">
+            {/* Official Jury Verdict Commentary */}
+            <div className="p-4 rounded-2xl bg-forest-950/90 border border-emerald-900/40 space-y-2 shadow-inner">
+              <div className="flex items-center gap-1.5 text-xs uppercase tracking-wider text-gold-400 font-serif font-bold">
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>High Commission Jury Remarks</span>
+                <span>OFFICIAL JURY VERDICT</span>
               </div>
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed italic">
-                &ldquo;{contestant.jury_comment}&rdquo;
+              <p className="text-xs sm:text-sm text-sage-200 leading-relaxed italic font-sans">
+                &ldquo;{contestant.jury_comment || `${contestant.name} demonstrates exceptional crown spread with remarkable wind discipline.`}&rdquo;
               </p>
             </div>
 
             {/* Mathematical Certification Box */}
-            <div className="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 text-[11px] font-mono text-slate-400 space-y-1">
-              <div className="text-emerald-400 font-bold">CALCULATION AUDIT:</div>
-              <div>({contestant.scores.volume} × 0.30) + ({contestant.scores.spread} × 0.25) + ({contestant.scores.symmetry} × 0.25) + ({contestant.scores.wind_style} × 0.20)</div>
-              <div className="text-white font-bold">= {contestant.scores.overall.toFixed(1)} Composite Pageant Score</div>
+            <div className="p-3.5 rounded-xl bg-forest-950 border border-emerald-900/30 text-[11px] font-mono text-sage-400 space-y-1">
+              <div className="text-emerald-300 font-bold">CALCULATION AUDIT:</div>
+              <div>({contestant.scores.volume.toFixed(1)} × 0.30) + ({contestant.scores.spread.toFixed(1)} × 0.25) + ({contestant.scores.symmetry.toFixed(1)} × 0.25) + ({contestant.scores.wind_style.toFixed(1)} × 0.20)</div>
+              <div className="text-white font-bold">= {contestant.scores.overall.toFixed(2)} Composite Pageant Score</div>
             </div>
 
           </div>
@@ -581,11 +582,11 @@ function ResultsContent() {
         </div>
 
         {/* Official Sovereign Certification Signatures Block */}
-        <div className="mt-10 pt-6 border-t border-emerald-950 grid grid-cols-1 sm:grid-cols-3 gap-6 items-center text-xs text-slate-400">
+        <div className="mt-10 pt-6 border-t border-emerald-900/40 grid grid-cols-1 sm:grid-cols-3 gap-6 items-center text-xs text-sage-300">
           <div className="space-y-1">
             <div className="font-serif font-bold text-white text-sm">Dr. K. Frondington</div>
-            <div className="text-[10px] font-mono text-emerald-400 uppercase">Chief Canopy Adjudicator</div>
-            <div className="text-[10px] text-slate-500">Department of Arboreal Geometry</div>
+            <div className="text-[10px] font-mono text-emerald-300 uppercase font-semibold">Chief Canopy Adjudicator</div>
+            <div className="text-[10px] text-sage-500">Department of Arboreal Geometry</div>
           </div>
 
           <div className="flex flex-col items-center justify-center text-center space-y-1">
@@ -595,22 +596,22 @@ function ResultsContent() {
             <div className="text-[9px] font-mono tracking-widest text-gold-400 uppercase font-bold">
               THENGA ROYALE 2026
             </div>
-            <div className="text-[9px] text-slate-500">Official High Commission Seal</div>
+            <div className="text-[9px] text-sage-500">Official High Commission Seal</div>
           </div>
 
           <div className="space-y-1 sm:text-right">
             <div className="font-serif font-bold text-white text-sm">Prof. S. Chloroplast</div>
-            <div className="text-[10px] font-mono text-gold-400 uppercase">High Sovereign Registrar</div>
-            <div className="text-[10px] text-slate-500">International Coconut Council</div>
+            <div className="text-[10px] font-mono text-gold-400 uppercase font-semibold">High Sovereign Registrar</div>
+            <div className="text-[10px] text-sage-500">International Coconut Council</div>
           </div>
         </div>
 
         {/* Action Buttons in Footer (Hidden on Print) */}
-        <div className="no-print mt-8 pt-6 border-t border-emerald-950 flex flex-wrap items-center justify-between gap-4">
+        <div className="no-print mt-8 pt-6 border-t border-emerald-900/40 flex flex-wrap items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-3">
             <Link
               href="/judge"
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-serif font-bold text-xs transition-colors shadow-md"
+              className="btn-glass-primary flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs uppercase shadow-md"
             >
               <span>Evaluate Another Palm 🌴</span>
             </Link>
@@ -618,7 +619,7 @@ function ResultsContent() {
             <button
               onClick={handleDownloadCertificateImage}
               disabled={isGeneratingImage}
-              className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-gradient-to-r from-gold-500 to-amber-400 hover:from-gold-400 hover:to-amber-300 text-slate-950 font-serif font-black text-xs uppercase tracking-wider transition-all shadow-md hover:scale-105"
+              className="btn-glass-gold flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-xs uppercase tracking-wider transition-all shadow-md hover:scale-105"
             >
               <Download className="w-4 h-4" />
               <span>Download Image (PNG)</span>
@@ -627,10 +628,10 @@ function ResultsContent() {
 
           <Link
             href="/leaderboard"
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-palace-900 hover:bg-palace-850 text-slate-200 border border-emerald-500/30 text-xs font-semibold transition-colors"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-forest-900 hover:bg-forest-800 text-ivory-100 border border-emerald-500/30 text-xs font-serif font-bold transition-colors"
           >
             <Trophy className="w-4 h-4 text-gold-400" />
-            <span>Return to Global Leaderboard</span>
+            <span>The Royal Rankings</span>
           </Link>
         </div>
 
@@ -642,7 +643,7 @@ function ResultsContent() {
 
 export default function ResultsPage() {
   return (
-    <Suspense fallback={<div className="text-center py-20 text-slate-400">Loading Sovereign Certificate...</div>}>
+    <Suspense fallback={<div className="text-center py-20 text-sage-400">Loading Judging Card...</div>}>
       <ResultsContent />
     </Suspense>
   );

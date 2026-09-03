@@ -3,7 +3,7 @@
 THENGA ROYALE 👑 - Official Coconut Hairstyle Index & Sarcastic Scoring Engine
 =============================================================================
 
-Calculates official Mr. Coconut 2026 hairstyle metrics, composite scores,
+Calculates official Mr. തെങ്ങ് 2026 hairstyle metrics, composite scores,
 and uniquely sarcastic humorous titles based on deterministic botanical criteria.
 
 The 4 Official Pageant Dimensions:
