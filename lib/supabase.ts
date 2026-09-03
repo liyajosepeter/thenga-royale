@@ -4,6 +4,7 @@ import { calculatePageantAwards } from './awards';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+export const supabaseBucket = process.env.NEXT_PUBLIC_SUPABASE_BUCKET || 'contestants';
 
 export const isSupabaseConfigured = Boolean(
   supabaseUrl && 
@@ -20,8 +21,7 @@ export const supabase = isSupabaseConfigured
 
 /**
  * Fetches all user-entered coconut entries sorted by overall_score DESC.
- * Returns ONLY what the user/operator has actually uploaded (no fake mock data),
- * enriched with official pageant award titles.
+ * Supports both 'contestants' and 'coconut_entries' tables seamlessly.
  */
 export async function fetchLeaderboardEntries(): Promise<Contestant[]> {
   let rawList: Contestant[] = [];
@@ -29,24 +29,33 @@ export async function fetchLeaderboardEntries(): Promise<Contestant[]> {
   // Case A: Attempt fetching from Supabase
   if (supabase) {
     try {
-      const { data, error } = await supabase
-        .from('coconut_entries')
+      // Try 'contestants' table first, then fallback to 'coconut_entries'
+      let response = await supabase
+        .from('contestants')
         .select('*')
         .order('overall_score', { ascending: false });
 
-      if (!error && data && data.length > 0) {
+      if (response.error || !response.data) {
+        response = await supabase
+          .from('coconut_entries')
+          .select('*')
+          .order('overall_score', { ascending: false });
+      }
+
+      const data = response.data;
+      if (data && data.length > 0) {
         rawList = data.map((row: any, idx: number) => ({
-          id: row.id,
+          id: String(row.id),
           name: row.name || 'Contestant Palm',
           origin: row.origin || 'Coastal Grove',
           image_url: row.image_url,
           created_at: row.created_at,
           scores: {
-            volume: Number(row.volume_score),
-            spread: Number(row.spread_score),
-            symmetry: Number(row.symmetry_score),
-            wind_style: Number(row.wind_score),
-            overall: Number(row.overall_score)
+            volume: Number(row.volume_score) || 0,
+            spread: Number(row.spread_score) || 0,
+            symmetry: Number(row.symmetry_score) || 0,
+            wind_style: Number(row.wind_score) || 0,
+            overall: Number(row.overall_score) || 0
           },
           rank: idx + 1,
           hairstyle_title: row.hairstyle_title || 'THE COASTAL RUNWAY CONTENDER',
@@ -111,7 +120,6 @@ export async function persistCoconutEntries(contestants: Contestant[]): Promise<
   if (supabase) {
     try {
       const rows = contestants.map((c) => ({
-        id: c.id.startsWith('contestant-') || c.id.length < 30 ? undefined : c.id,
         name: c.name,
         origin: c.origin || 'Coastal Grove',
         image_url: c.image_url,
@@ -124,10 +132,14 @@ export async function persistCoconutEntries(contestants: Contestant[]): Promise<
         jury_comment: c.jury_comment
       }));
 
-      const { error } = await supabase.from('coconut_entries').insert(rows);
+      // Try inserting into 'contestants' first, then 'coconut_entries'
+      let { error } = await supabase.from('contestants').insert(rows);
       if (error) {
-        console.warn('[Supabase Insert Notice]:', error.message);
-        return false;
+        const retry = await supabase.from('coconut_entries').insert(rows);
+        if (retry.error) {
+          console.warn('[Supabase Insert Notice]:', error.message, retry.error.message);
+          return false;
+        }
       }
       return true;
     } catch (err) {

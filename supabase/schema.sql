@@ -1,8 +1,8 @@
 -- =============================================================================
 -- THENGA ROYALE 👑 - Supabase Database & Storage Schema
 -- =============================================================================
--- Run this in the Supabase SQL Editor to initialize the database tables and
--- storage bucket for Thenga Royale.
+-- Run this in the Supabase SQL Editor (SQL Editor -> New query -> Run)
+-- to initialize the database tables and storage bucket for Thenga Royale.
 -- =============================================================================
 
 -- 1. Enable UUID Extension
@@ -35,30 +35,36 @@ ON public.coconut_entries (created_at DESC);
 ALTER TABLE public.coconut_entries ENABLE ROW LEVEL SECURITY;
 
 -- 5. Open Public Policies (No authentication, open operator pageant)
--- Anyone can read entries from the leaderboard
+DROP POLICY IF EXISTS "Public Read Access for Coconut Entries" ON public.coconut_entries;
 CREATE POLICY "Public Read Access for Coconut Entries" 
 ON public.coconut_entries 
 FOR SELECT 
 USING (true);
 
--- Anyone can submit contestants (no login required)
+DROP POLICY IF EXISTS "Public Insert Access for Coconut Entries" ON public.coconut_entries;
 CREATE POLICY "Public Insert Access for Coconut Entries" 
 ON public.coconut_entries 
 FOR INSERT 
 WITH CHECK (true);
 
--- 6. Storage Bucket for Coconut Palm Photos (Optional)
+-- 6. Storage Buckets for Palm Photos ('contestants' and 'coconuts')
+INSERT INTO storage.buckets (id, name, public) 
+VALUES ('contestants', 'contestants', true)
+ON CONFLICT (id) DO UPDATE SET public = true;
+
 INSERT INTO storage.buckets (id, name, public) 
 VALUES ('coconuts', 'coconuts', true)
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT (id) DO UPDATE SET public = true;
 
--- Public Storage Access Policies
-CREATE POLICY "Public Read Access on coconuts bucket" 
+-- Public Storage Access Policies for contestants & coconuts
+DROP POLICY IF EXISTS "Public Read Access on contestants bucket" ON storage.objects;
+CREATE POLICY "Public Read Access on contestants bucket" 
 ON storage.objects 
 FOR SELECT 
-USING (bucket_id = 'coconuts');
+USING (bucket_id IN ('contestants', 'coconuts'));
 
-CREATE POLICY "Public Insert Access on coconuts bucket" 
+DROP POLICY IF EXISTS "Public Insert Access on contestants bucket" ON storage.objects;
+CREATE POLICY "Public Insert Access on contestants bucket" 
 ON storage.objects 
 FOR INSERT 
-WITH CHECK (bucket_id = 'coconuts');
+WITH CHECK (bucket_id IN ('contestants', 'coconuts'));

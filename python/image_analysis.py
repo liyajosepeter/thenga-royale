@@ -288,6 +288,7 @@ def analyze_coconut_image(
 
     return {
         "status": "success",
+        "name": contestant_name,
         "contestant_name": contestant_name,
         "volume_score": volume_score,
         "spread_score": spread_score,

@@ -18,14 +18,19 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    const { data, error } = await supabase
-      .from('coconut_entries')
+    let response = await supabase
+      .from('contestants')
       .select('*')
       .order('overall_score', { ascending: false });
 
-    if (error) {
-      throw error;
+    if (response.error || !response.data) {
+      response = await supabase
+        .from('coconut_entries')
+        .select('*')
+        .order('overall_score', { ascending: false });
     }
+
+    const data = response.data;
 
     return NextResponse.json({
       status: 'success',
@@ -68,19 +73,18 @@ export async function POST(req: NextRequest) {
       jury_comment: item.jury_comment || ''
     }));
 
-    const { data, error } = await supabase
-      .from('coconut_entries')
-      .insert(rows)
-      .select();
-
-    if (error) {
-      throw error;
+    let result = await supabase.from('contestants').insert(rows).select();
+    if (result.error) {
+      result = await supabase.from('coconut_entries').insert(rows).select();
+      if (result.error) {
+        throw result.error;
+      }
     }
 
     return NextResponse.json({
       status: 'success',
-      inserted: data?.length || 0,
-      entries: data
+      inserted: result.data?.length || 0,
+      entries: result.data
     });
 
   } catch (error: any) {
