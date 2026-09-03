@@ -27,6 +27,9 @@ export default function ContestantCard({ contestant, isLeaderboardView = false }
           src={contestant.image_url}
           alt={contestant.name}
           className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%230a101d'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='32' fill='%2310b981'%3E🌴%3C/text%3E%3C/svg%3E";
+          }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-palace-950 via-palace-950/40 to-transparent" />
 

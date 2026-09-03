@@ -23,7 +23,7 @@ import {
   RotateCcw
 } from 'lucide-react';
 import { UploadedCoconutItem, Contestant } from '@/lib/types';
-import { SAMPLE_PALMS_POOL } from '@/lib/samplePalms';
+import { persistCoconutEntries } from '@/lib/supabase';
 import MetricBar from './MetricBar';
 import AwardBadge from './AwardBadge';
 
@@ -70,32 +70,74 @@ export default function UploadDropzone() {
     percentage: 0
   });
 
+  // Helper to convert File to compressed persistent Base64 Data URL
+  const readFileAsDataUrl = (file: File): Promise<string> => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const img = new Image();
+        img.onload = () => {
+          const maxDim = 800;
+          let width = img.width;
+          let height = img.height;
+          if (width > maxDim || height > maxDim) {
+            if (width > height) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            } else {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL('image/jpeg', 0.85));
+          } else {
+            resolve(reader.result as string);
+          }
+        };
+        img.onerror = () => resolve(reader.result as string);
+        img.src = reader.result as string;
+      };
+      reader.onerror = () => resolve("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%230a101d'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='32' fill='%2310b981'%3E🌴%3C/text%3E%3C/svg%3E");
+      reader.readAsDataURL(file);
+    });
+  };
+
   // Validation helper
-  const validateAndProcessFiles = (fileList: FileList | File[]) => {
+  const validateAndProcessFiles = async (fileList: FileList | File[]) => {
     setErrorMessage(null);
     const validFiles: UploadedCoconutItem[] = [];
     const errors: string[] = [];
 
-    Array.from(fileList).forEach((file, index) => {
+    const fileArray = Array.from(fileList);
+    for (let index = 0; index < fileArray.length; index++) {
+      const file = fileArray[index];
+
       // Check file type
       if (!ALLOWED_TYPES.includes(file.type) && !file.name.match(/\.(jpg|jpeg|png|webp|avif|gif)$/i)) {
         errors.push(`"${file.name}" is not a supported image format (Use JPG, PNG, or WebP).`);
-        return;
+        continue;
       }
 
       // Check file size
       if (file.size > MAX_FILE_SIZE_BYTES) {
         errors.push(`"${file.name}" exceeds maximum allowed file size of 15MB.`);
-        return;
+        continue;
       }
 
       // Check for zero-byte / corrupt file
       if (file.size === 0) {
         errors.push(`"${file.name}" is empty or corrupted.`);
-        return;
+        continue;
       }
 
-      const previewUrl = URL.createObjectURL(file);
+      // Read as persistent Base64 Data URL
+      const previewUrl = await readFileAsDataUrl(file);
       const autoName = file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
       const cleanName = autoName.charAt(0).toUpperCase() + autoName.slice(1);
 
@@ -108,7 +150,7 @@ export default function UploadDropzone() {
         fileName: file.name,
         fileType: file.type
       });
-    });
+    }
 
     if (errors.length > 0) {
       setErrorMessage(errors.join(' '));
@@ -147,30 +189,6 @@ export default function UploadDropzone() {
       validateAndProcessFiles(e.target.files);
     }
     if (fileInputRef.current) fileInputRef.current.value = '';
-  };
-
-  // Preset Loaders (for 1, 5, 10, 20 items)
-  const handleAddPresetBatch = (count: number) => {
-    setErrorMessage(null);
-    const newItems: UploadedCoconutItem[] = [];
-    const startIndex = items.length;
-
-    for (let i = 0; i < count; i++) {
-      const sample = SAMPLE_PALMS_POOL[(startIndex + i) % SAMPLE_PALMS_POOL.length];
-      newItems.push({
-        id: `sample-${Date.now()}-${i}-${Math.random().toString(36).substring(2, 6)}`,
-        previewUrl: sample.url,
-        name: sample.name,
-        origin: sample.origin,
-        fileSize: 1024 * 350 + Math.floor(Math.random() * 50000),
-        fileName: `${sample.name.toLowerCase().replace(/\s+/g, '_')}.jpg`,
-        fileType: 'image/jpeg',
-        isSamplePreset: true
-      });
-    }
-
-    setItems((prev) => [...prev, ...newItems]);
-    setAnalysisCompleted(false);
   };
 
   // Item modifications
@@ -306,16 +324,9 @@ export default function UploadDropzone() {
       });
     }
 
-    // Save successful batch contestants to localStorage
+    // Persist all successful batch contestants to Supabase and LocalStorage
     if (successfulList.length > 0) {
-      try {
-        const stored = localStorage.getItem('thenga_contestants');
-        const existingList: Contestant[] = stored ? JSON.parse(stored) : [];
-        const updatedList = [...successfulList, ...existingList];
-        localStorage.setItem('thenga_contestants', JSON.stringify(updatedList));
-      } catch (e) {
-        // LocalStorage fallback
-      }
+      await persistCoconutEntries(successfulList);
     }
 
     setAnalyzedResults({
@@ -549,57 +560,6 @@ export default function UploadDropzone() {
                   COCONUTS ENTERED: <span className="text-emerald-400">{items.length}</span>
                 </div>
               </div>
-            </div>
-          </div>
-
-          {/* Preset Quick Batch Insertion Bar */}
-          <div className="glass-panel p-4 sm:p-5 rounded-2xl border-emerald-950 space-y-2">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-gold-400" />
-                <span>Quick Test Flight Generators (One-Click Batches):</span>
-              </span>
-              <span className="text-[11px] text-slate-400 italic">
-                Loads authentic tropical contestants instantly
-              </span>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1">
-              <button
-                type="button"
-                onClick={() => handleAddPresetBatch(1)}
-                className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-palace-900/90 hover:bg-emerald-500/20 border border-emerald-950 hover:border-emerald-500/40 text-xs text-slate-200 font-medium transition-all hover:scale-[1.02] active:scale-[0.98]"
-              >
-                <span>🌴</span>
-                <span>+ 1 Royal Palm</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleAddPresetBatch(5)}
-                className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-palace-900/90 hover:bg-teal-500/20 border border-emerald-950 hover:border-teal-500/40 text-xs text-slate-200 font-medium transition-all hover:scale-[1.02] active:scale-[0.98]"
-              >
-                <span>🥥</span>
-                <span>+ 5 Contestants</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleAddPresetBatch(10)}
-                className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-palace-900/90 hover:bg-cyan-500/20 border border-emerald-950 hover:border-cyan-500/40 text-xs text-slate-200 font-medium transition-all hover:scale-[1.02] active:scale-[0.98]"
-              >
-                <span>✨</span>
-                <span>+ 10 Contestants</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleAddPresetBatch(20)}
-                className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-palace-900/90 hover:bg-gold-500/20 border border-gold-500/30 hover:border-gold-400 text-xs text-gold-300 font-serif font-bold transition-all hover:scale-[1.02] active:scale-[0.98] glow-gold"
-              >
-                <span>👑</span>
-                <span>+ 20 Grand Gala Flight</span>
-              </button>
             </div>
           </div>
 

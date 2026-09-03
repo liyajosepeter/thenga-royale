@@ -3,7 +3,6 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { MOCK_CONTESTANTS } from '@/lib/mockData';
 import { Contestant } from '@/lib/types';
 import AwardBadge from '@/components/AwardBadge';
 import MetricBar from '@/components/MetricBar';
@@ -18,12 +17,12 @@ function ResultsContent() {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    // Try finding in localStorage first, then fallback to mock data
+    // Search user-uploaded contestants from localStorage
     try {
       const stored = localStorage.getItem('thenga_contestants');
       if (stored) {
         const localList: Contestant[] = JSON.parse(stored);
-        const match = localList.find(c => c.id === contestantId);
+        const match = localList.find((c) => c.id === contestantId) || localList[0];
         if (match) {
           setContestant(match);
           return;
@@ -32,16 +31,22 @@ function ResultsContent() {
     } catch (e) {
       // LocalStorage fallback
     }
-
-    const mockMatch = MOCK_CONTESTANTS.find(c => c.id === contestantId) || MOCK_CONTESTANTS[0];
-    setContestant(mockMatch);
   }, [contestantId]);
 
   if (!contestant) {
     return (
-      <div className="glass-panel p-12 rounded-3xl text-center space-y-4 max-w-xl mx-auto">
-        <span className="text-4xl animate-bounce">🌴</span>
-        <h2 className="font-serif font-bold text-xl text-white">Retrieving Sovereign Dossier...</h2>
+      <div className="glass-panel-gold p-12 rounded-3xl text-center space-y-4 max-w-xl mx-auto border-gold-400/40">
+        <span className="text-4xl">🌴</span>
+        <h2 className="font-serif font-bold text-2xl text-white">No Evaluated Dossier Found</h2>
+        <p className="text-xs text-slate-300">
+          Upload and analyze coconut tree images in the Jury Chamber to generate an official certificate.
+        </p>
+        <Link
+          href="/judge"
+          className="inline-flex items-center gap-2 py-3 px-6 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs"
+        >
+          <span>Go to Jury Chamber 🌴</span>
+        </Link>
       </div>
     );
   }
@@ -169,6 +174,9 @@ function ResultsContent() {
                 src={contestant.image_url}
                 alt={contestant.name}
                 className="w-full h-full object-cover"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%230a101d'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='32' fill='%2310b981'%3E🌴%3C/text%3E%3C/svg%3E";
+                }}
               />
 
               {/* Simulated Computer Vision Annotations Overlay */}

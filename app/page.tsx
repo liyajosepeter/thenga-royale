@@ -21,14 +21,20 @@ import {
   Flame,
   Award
 } from 'lucide-react';
-import { MOCK_CONTESTANTS } from '@/lib/mockData';
+
+import { Contestant } from '@/lib/types';
 import ContestantCard from '@/components/ContestantCard';
-import AwardBadge from '@/components/AwardBadge';
-import MetricBar from '@/components/MetricBar';
+import { fetchLeaderboardEntries } from '@/lib/supabase';
 
 export default function HomePage() {
-  const reigningChampion = MOCK_CONTESTANTS[0];
-  const topThree = MOCK_CONTESTANTS.slice(0, 3);
+  const [topContestants, setTopContestants] = useState<Contestant[]>([]);
+
+  useEffect(() => {
+    fetchLeaderboardEntries().then((entries) => {
+      const clean = entries.filter((c) => !c.id.match(/^contestant-[1-6]$/));
+      setTopContestants(clean.slice(0, 3));
+    });
+  }, []);
 
   // Interactive Live Score Simulator State for the Hero Section
   const [simVolume, setSimVolume] = useState(94);
@@ -461,33 +467,51 @@ export default function HomePage() {
       </section>
 
 
-      {/* 5. TOP CONTESTANTS PREVIEW SHOWCASE */}
-      <section className="space-y-6">
-        <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 border-b border-emerald-950 pb-4">
-          <div>
-            <div className="flex items-center gap-2 text-gold-400 text-xs font-serif uppercase tracking-widest font-semibold">
-              <Sparkles className="w-4 h-4" />
-              <span>Current Sovereign Monarchs</span>
+      {/* 5. TOP CROWNED MONARCHS SHOWCASE */}
+      {topContestants.length > 0 ? (
+        <section className="space-y-6 pt-4">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-emerald-950 pb-4">
+            <div>
+              <div className="flex items-center gap-2 text-gold-400 text-xs font-serif uppercase tracking-widest font-semibold">
+                <Sparkles className="w-4 h-4" />
+                <span>Current Sovereign Monarchs</span>
+              </div>
+              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-white mt-1">
+                Top Ranked Arboreal Hairstyle Titleholders
+              </h2>
             </div>
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-white mt-1">
-              Top Ranked Arboreal Hairstyle Titleholders
-            </h2>
+            <Link
+              href="/leaderboard"
+              className="flex items-center gap-1.5 text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition-colors"
+            >
+              <span>View Complete Leaderboard</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
-          <Link
-            href="/leaderboard"
-            className="flex items-center gap-1.5 text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition-colors"
-          >
-            <span>View Complete Leaderboard</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {topThree.map((contestant) => (
-            <ContestantCard key={contestant.id} contestant={contestant} />
-          ))}
-        </div>
-      </section>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {topContestants.map((contestant) => (
+              <ContestantCard key={contestant.id} contestant={contestant} />
+            ))}
+          </div>
+        </section>
+      ) : (
+        <section className="glass-panel-gold rounded-3xl p-8 sm:p-12 text-center space-y-4 border-gold-500/30">
+          <span className="text-4xl">👑</span>
+          <h3 className="font-serif text-2xl font-black text-white">The Throne of Mr. Coconut 2026 is Empty</h3>
+          <p className="text-xs text-slate-300 max-w-md mx-auto">
+            No contestants have been entered into the active flight roster. Upload coconut tree crown images to crown the next monarch.
+          </p>
+          <div className="pt-2">
+            <Link
+              href="/judge"
+              className="inline-flex items-center gap-2 py-3 px-6 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-slate-950 font-serif font-black text-xs transition-all glow-emerald"
+            >
+              <span>JUDGE A COCONUT 🌴</span>
+            </Link>
+          </div>
+        </section>
+      )}
 
     </div>
   );
