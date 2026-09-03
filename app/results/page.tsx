@@ -107,11 +107,19 @@ function ResultsContent() {
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
               <span>Official Certificate of Arboreal Splendor</span>
             </div>
-            <h1 className="font-serif text-3xl sm:text-4xl font-extrabold text-white">
-              {contestant.name}
-            </h1>
+            <div className="flex flex-wrap items-center gap-3 mt-1">
+              <h1 className="font-serif text-3xl sm:text-4xl font-extrabold text-white">
+                {contestant.name}
+              </h1>
+              {contestant.hairstyle_title && (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-gold-500/20 border border-gold-400/40 text-xs font-serif font-bold text-gold-300 uppercase tracking-wide">
+                  <Sparkles className="w-3.5 h-3.5 text-gold-400" />
+                  <span>{contestant.hairstyle_title}</span>
+                </span>
+              )}
+            </div>
             {contestant.origin && (
-              <div className="flex items-center gap-1.5 text-xs text-slate-400">
+              <div className="flex items-center gap-1.5 text-xs text-slate-400 mt-1">
                 <MapPin className="w-3.5 h-3.5 text-emerald-400" />
                 <span>{contestant.origin}</span>
               </div>

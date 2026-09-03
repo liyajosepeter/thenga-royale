@@ -1,10 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Contestant } from '@/lib/types';
 import AwardBadge from './AwardBadge';
 import MetricBar from './MetricBar';
-import { Sparkles, MapPin, Award, ArrowUpRight } from 'lucide-react';
+import { Sparkles, MapPin, Award, ArrowUpRight, Crown } from 'lucide-react';
 
 interface ContestantCardProps {
   contestant: Contestant;
@@ -16,20 +15,20 @@ export default function ContestantCard({ contestant, isLeaderboardView = false }
 
   return (
     <div
-      className={`group relative rounded-2xl transition-all duration-300 overflow-hidden ${
+      className={`group relative rounded-3xl transition-all duration-300 overflow-hidden ${
         isWinner
           ? 'glass-panel-gold glow-gold scale-[1.02] border-gold-400/50 hover:border-gold-300'
           : 'glass-panel hover:border-emerald-500/50 hover:-translate-y-1'
       }`}
     >
-      {/* Top Banner with Rank Badge */}
+      {/* Top Banner with Image & Overlays */}
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-950">
         <img
           src={contestant.image_url}
           alt={contestant.name}
           className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-palace-950 via-palace-950/30 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-palace-950 via-palace-950/40 to-transparent" />
 
         {/* Rank Badge */}
         {contestant.rank && (
@@ -57,20 +56,28 @@ export default function ContestantCard({ contestant, isLeaderboardView = false }
             <span className="text-[10px] uppercase tracking-wider text-slate-400 font-medium">Pageant Score</span>
             <div className="flex items-baseline gap-1">
               <span className="font-serif text-lg font-black text-emerald-400">
-                {contestant.scores.overall.toFixed(1)}
+                {contestant.scores.overall.toFixed(2)}
               </span>
               <span className="text-[10px] text-slate-500">/ 100</span>
             </div>
           </div>
         </div>
 
-        {/* Contestant Name & Origin at bottom of photo */}
-        <div className="absolute bottom-3 left-3 right-3">
+        {/* Contestant Name, Provenance & Hairstyle Title */}
+        <div className="absolute bottom-3 left-3 right-3 space-y-1">
+          {contestant.hairstyle_title && (
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-gold-500/20 border border-gold-400/40 text-[10px] font-serif font-bold text-gold-300 uppercase tracking-wide backdrop-blur-md">
+              <Sparkles className="w-3 h-3 text-gold-400" />
+              <span>{contestant.hairstyle_title}</span>
+            </div>
+          )}
+
           <h3 className="font-serif font-bold text-lg text-white group-hover:text-emerald-300 transition-colors drop-shadow-md">
             {contestant.name}
           </h3>
+
           {contestant.origin && (
-            <div className="flex items-center gap-1 text-xs text-slate-300 mt-0.5">
+            <div className="flex items-center gap-1 text-xs text-slate-300">
               <MapPin className="w-3 h-3 text-emerald-400" />
               <span>{contestant.origin}</span>
             </div>
@@ -78,7 +85,7 @@ export default function ContestantCard({ contestant, isLeaderboardView = false }
         </div>
       </div>
 
-      {/* Body Content */}
+      {/* Card Body */}
       <div className="p-4 space-y-4">
         {/* Awards Row */}
         {contestant.awards && contestant.awards.length > 0 && (
@@ -89,7 +96,7 @@ export default function ContestantCard({ contestant, isLeaderboardView = false }
           </div>
         )}
 
-        {/* Hairstyle Dimensions Breakdown */}
+        {/* 4 Hairstyle Criteria Metric Bars */}
         <div className="space-y-2.5 pt-1">
           <MetricBar
             label="Hair Volume"
@@ -121,9 +128,19 @@ export default function ContestantCard({ contestant, isLeaderboardView = false }
           />
         </div>
 
+        {/* Overall Score Summary Bar */}
+        <div className="p-3 rounded-xl bg-palace-950/70 border border-emerald-500/20 flex items-center justify-between">
+          <div className="text-[11px] font-mono text-slate-400 uppercase tracking-wider">
+            OVERALL HAIRSTYLE SCORE
+          </div>
+          <div className="font-serif text-base font-black text-emerald-300">
+            {contestant.scores.overall.toFixed(2)} <span className="text-[10px] text-slate-500 font-normal">/ 100</span>
+          </div>
+        </div>
+
         {/* Scientific Jury Commentary Snippet */}
         {contestant.jury_comment && (
-          <p className="text-xs text-slate-400 italic line-clamp-2 bg-palace-900/60 p-2.5 rounded-lg border border-emerald-950">
+          <p className="text-xs text-slate-400 italic line-clamp-2 bg-palace-900/60 p-2.5 rounded-xl border border-emerald-950">
             &ldquo;{contestant.jury_comment}&rdquo;
           </p>
         )}

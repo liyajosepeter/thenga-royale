@@ -30,15 +30,15 @@ import urllib.request
 from typing import Union, Dict, Any
 
 try:
-    from .scoring import calculate_overall_score, generate_jury_critique, WEIGHTS
+    from .scoring import calculate_overall_score, generate_jury_critique, assign_hairstyle_title, WEIGHTS
 except (ImportError, ValueError):
     try:
-        from scoring import calculate_overall_score, generate_jury_critique, WEIGHTS
+        from scoring import calculate_overall_score, generate_jury_critique, assign_hairstyle_title, WEIGHTS
     except ImportError:
         import sys
         import os
         sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-        from scoring import calculate_overall_score, generate_jury_critique, WEIGHTS
+        from scoring import calculate_overall_score, generate_jury_critique, assign_hairstyle_title, WEIGHTS
 
 
 def load_image_safely(image_input: Union[str, bytes, np.ndarray]) -> np.ndarray:
@@ -274,6 +274,7 @@ def analyze_coconut_image(
     # STEP 5: Composite Score & Pageant Deliberation
     # -------------------------------------------------------------------------
     overall_score = calculate_overall_score(volume_score, spread_score, symmetry_score, wind_score)
+    hairstyle_title = assign_hairstyle_title(volume_score, spread_score, symmetry_score, wind_score, overall_score)
 
     scores_dict = {
         "volume": volume_score,
@@ -293,6 +294,7 @@ def analyze_coconut_image(
         "symmetry_score": symmetry_score,
         "wind_score": wind_score,
         "overall_score": overall_score,
+        "hairstyle_title": hairstyle_title,
         "scores": scores_dict,
         "weights": WEIGHTS,
         "dimensions": {

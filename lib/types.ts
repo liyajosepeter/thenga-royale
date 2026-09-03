@@ -36,6 +36,7 @@ export interface Contestant {
   created_at: string;
   scores: ScoreBreakdown;
   rank?: number;
+  hairstyle_title?: string;
   awards?: PageantAward[];
   jury_comment?: string;
   frond_pixel_count?: number;

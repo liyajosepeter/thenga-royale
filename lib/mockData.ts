@@ -12,9 +12,10 @@ export const MOCK_CONTESTANTS: Contestant[] = [
       spread: 94.2,
       symmetry: 95.8,
       wind_style: 91.0,
-      overall: 94.6
+      overall: 94.62
     },
     rank: 1,
+    hairstyle_title: 'THE COCONUT GENTLEMAN',
     awards: [
       { id: 'mr_coconut_2026', title: 'MR. COCONUT 2026', icon: '👑', color: 'gold', description: 'Supreme Champion of Arboreal Aesthetics' },
       { id: 'volume_king', title: 'VOLUME KING', icon: '🌿', color: 'teal', description: 'Highest Chloroplast Canopy Density' }
@@ -35,9 +36,10 @@ export const MOCK_CONTESTANTS: Contestant[] = [
       spread: 98.5,
       symmetry: 92.0,
       wind_style: 89.0,
-      overall: 91.8
+      overall: 91.83
     },
     rank: 2,
+    hairstyle_title: 'THE FROND FASHION MODEL',
     awards: [
       { id: 'spread_king', title: 'SPREAD KING', icon: '↔️', color: 'cyan', description: 'Unrivaled Horizontal Horizon Coverage' }
     ],
@@ -57,77 +59,81 @@ export const MOCK_CONTESTANTS: Contestant[] = [
       spread: 82.0,
       symmetry: 99.6,
       wind_style: 72.0,
-      overall: 85.6
+      overall: 85.60
     },
     rank: 3,
+    hairstyle_title: 'THE CARTESIAN PERFECTIONIST',
     awards: [
-      { id: 'symmetry_king', title: 'SYMMETRY KING', icon: '⚖️', color: 'emerald', description: 'Flawless Bilateral Botanical Balance' }
+      { id: 'symmetry_king', title: 'SYMMETRY KING', icon: '⚖️', color: 'emerald', description: 'Flawless Mathematical Frond Equilibrium' }
     ],
-    jury_comment: 'A mathematical triumph. Left-to-right pixel variance is under 0.4%, creating a hypnotic Cartesian harmony that stunned the judging panel.',
-    frond_pixel_count: 38400,
-    canopy_box: { x: 120, y: 80, width: 560, height: 410 },
+    jury_comment: 'With a 99.6% bilateral moment score, Professor Geometricus achieves mathematical symmetry that makes grown crystallographers weep.',
+    frond_pixel_count: 36500,
+    canopy_box: { x: 120, y: 80, width: 560, height: 460 },
     is_verified_cv: true
   },
   {
     id: 'contestant-4',
-    name: 'Monsoon Maverick',
-    origin: 'Kovalam Lighthouse Crest',
-    image_url: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
+    name: 'Captain Monsoon',
+    origin: 'Kovalam Lighthouse Ridge',
+    image_url: 'https://images.unsplash.com/photo-1540206351-d6465b3ac5c1?auto=format&fit=crop&w=800&q=80',
     created_at: '2026-09-02T16:45:00Z',
     scores: {
-      volume: 84.5,
-      spread: 86.0,
-      symmetry: 78.0,
+      volume: 78.0,
+      spread: 85.0,
+      symmetry: 68.0,
       wind_style: 99.2,
-      overall: 86.2
+      overall: 81.49
     },
     rank: 4,
+    hairstyle_title: 'THE MONSOONAL DRAMA MONARCH',
     awards: [
-      { id: 'wind_king', title: 'WIND KING', icon: '💨', color: 'amber', description: 'Peak Aerodynamic Monsoonal Drama' }
+      { id: 'wind_king', title: 'WIND KING', icon: '💨', color: 'amber', description: 'Maximum Monsoonal Hairtoss & Aerodynamic Drama' }
     ],
-    jury_comment: 'Monsoon Maverick channels Category 4 tradewinds into an electrifying hairtoss. Pure, untamed coastal swagger with maximum directional flair.',
-    frond_pixel_count: 36200,
-    canopy_box: { x: 90, y: 95, width: 610, height: 390 },
+    jury_comment: 'Captain Monsoon channels raw Arabian Sea gale-force wind vectors with breathtaking kinetic frond orientation.',
+    frond_pixel_count: 31200,
+    canopy_box: { x: 90, y: 120, width: 620, height: 380 },
     is_verified_cv: true
   },
   {
     id: 'contestant-5',
-    name: 'Breeze Lord Tharoor',
-    origin: 'Thiruvananthapuram Golf Club',
-    image_url: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80',
-    created_at: '2026-09-03T11:20:00Z',
+    name: 'Duke of Thiruvananthapuram',
+    origin: 'Padmanabhaswamy Palace Gardens',
+    image_url: 'https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&w=800&q=80',
+    created_at: '2026-09-02T18:00:00Z',
     scores: {
-      volume: 85.0,
-      spread: 91.0,
-      symmetry: 81.0,
-      wind_style: 87.5,
-      overall: 86.0
+      volume: 84.0,
+      spread: 79.0,
+      symmetry: 88.0,
+      wind_style: 74.0,
+      overall: 81.75
     },
     rank: 5,
+    hairstyle_title: 'THE BILATERAL BARON',
     awards: [],
-    jury_comment: 'Exhibits an eloquent and sesquipedalian frond arrangement, articulating botanical grandeur with dignified nonchalance.',
-    frond_pixel_count: 37800,
-    canopy_box: { x: 100, y: 90, width: 590, height: 400 },
+    jury_comment: 'A dignified sovereign contender presenting harmonious proportion and classic coastal royal comportment.',
+    frond_pixel_count: 34100,
+    canopy_box: { x: 100, y: 90, width: 600, height: 430 },
     is_verified_cv: true
   },
   {
     id: 'contestant-6',
-    name: 'Coco Chanel No. 5',
-    origin: 'Fort Kochi Aspinwall House',
-    image_url: 'https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?auto=format&fit=crop&w=800&q=80',
-    created_at: '2026-09-03T13:10:00Z',
+    name: 'Baron Von Malabar',
+    origin: 'Bekal Fort Outpost',
+    image_url: 'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?auto=format&fit=crop&w=800&q=80',
+    created_at: '2026-09-03T08:20:00Z',
     scores: {
-      volume: 82.0,
-      spread: 89.0,
-      symmetry: 88.4,
-      wind_style: 80.5,
-      overall: 85.1
+      volume: 91.0,
+      spread: 74.0,
+      symmetry: 82.0,
+      wind_style: 68.0,
+      overall: 79.90
     },
     rank: 6,
+    hairstyle_title: 'THE FOLIAGE FASHIONISTA',
     awards: [],
-    jury_comment: 'Haute-couture frond tailoring with minimalist silhouette. A timeless classic on the pageant runway.',
-    frond_pixel_count: 34500,
-    canopy_box: { x: 110, y: 100, width: 570, height: 380 },
+    jury_comment: 'Robust frond structure with thick, sun-drenched foliage capable of withstanding relentless coastal spray.',
+    frond_pixel_count: 38900,
+    canopy_box: { x: 110, y: 70, width: 580, height: 450 },
     is_verified_cv: true
   }
 ];
