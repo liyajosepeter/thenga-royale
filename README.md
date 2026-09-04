@@ -12,13 +12,33 @@
 *“Which coconut tree has the most magnificent hairstyle?”*  
 *Evaluated with deterministic Computer Vision, OpenCV feature extraction, and unapologetic pageant drama.*
 
-[![Next.js 14](https://img.shields.io/badge/Next.js-14.2.15-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
-[![Python 3.13](https://img.shields.io/badge/Python-3.13-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![OpenCV](https://img.shields.io/badge/OpenCV-Headless-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white)](https://opencv.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.14-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-[![Vercel Deploy](https://img.shields.io/badge/Vercel-Production_Ready-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
+<br/>
+
+[![🌐 Live Demo](https://img.shields.io/badge/LIVE_DEMO-Vercel_App-000000?style=for-the-badge&logo=vercel&logoColor=white&color=000000)](https://thenga-royale.vercel.app)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-thenga--royale-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/liyajosepeter/thenga-royale)
+
+<br/>
+
+[![Next.js 14](https://img.shields.io/badge/Next.js-14.2.15-000000?style=flat-square&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![React 18](https://img.shields.io/badge/React-18.3.1-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.6.3-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.14-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Python 3.13](https://img.shields.io/badge/Python-3.13-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
+[![OpenCV](https://img.shields.io/badge/OpenCV-Headless_4.8+-5C3EE8?style=flat-square&logo=opencv&logoColor=white)](https://opencv.org/)
+[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL_%26_Storage-3FCF8E?style=flat-square&logo=supabase&logoColor=white)](https://supabase.com/)
+[![Vercel Deployment](https://img.shields.io/badge/Vercel-Deployed-000000?style=flat-square&logo=vercel&logoColor=white)](https://thenga-royale.vercel.app)
 
 </div>
+
+---
+
+## 🔗 Live Application & Deployment
+
+| Resource | Direct Link |
+| :--- | :--- |
+| **🌐 Production Web App (Vercel)** | [https://thenga-royale.vercel.app](https://thenga-royale.vercel.app) |
+| **📦 Source Code Repository** | [https://github.com/liyajosepeter/thenga-royale](https://github.com/liyajosepeter/thenga-royale) |
+| **⚡ API Health Endpoint** | [https://thenga-royale.vercel.app/api/health](https://thenga-royale.vercel.app/api/health) |
 
 ---
 
@@ -38,13 +58,14 @@
 
 ## 🌴 Overview & Philosophy
 
-**Thenga Royale** is an intersection of serious computer vision research, high-fashion beauty pageant aesthetics (*"Miss Universe × Luxury Tropical Resort × Coconut Kingdom"*), and sarcastic Malayali arboreal commentary.
+**Thenga Royale** is a unique intersection of serious computer vision research, high-fashion beauty pageant aesthetics (*"Miss Universe × Luxury Tropical Resort × Coconut Kingdom"*), and sarcastic Malayali arboreal commentary.
 
-### 🌿 Pageant Tenets:
+### 🌿 Core Pageant Principles:
 - **No Logins or Paywalls**: Anonymous, friction-free submission flight for 1, 5, 10, or 20 coconut trees at once.
 - **Independent Contestant Trees**: Every uploaded photo competes as its own sovereign candidate.
 - **100% Deterministic Mathematical Scoring**: The exact same coconut photo will always receive the exact same score across all four dimensions.
-- **Zero-Config Persistent Leaderboard**: Automatic synchronization across Supabase PostgreSQL and browser persistent storage.
+- **Zero-Config Persistent Storage**: Automatic synchronization across Supabase PostgreSQL and browser local persistence fallback.
+- **Interactive Coronation Ceremony**: Real-time golden envelope unsealing, tiara crowning animations, frond rustling speech generator, and cheer counters.
 
 ---
 
@@ -98,22 +119,14 @@ $$\text{Composite Score} = (V \times 0.30) + (S_{\text{spread}} \times 0.25) + (
 
 Before any candidate palm proceeds to hairstyle analysis, it passes through an automated computer vision eligibility filter (`python/coconut_validator.py` / `/api/validate`):
 
-```
-UPLOAD IMAGE
-      ↓
-🌴 COCONUT ELIGIBILITY CHECK
-      ↓
-   ┌───────────────┐
-   │               │
-VALID (≥ 0.45)    INVALID (< 0.45)
-   │               │
-   ↓               ↓
-CONTINUE          REJECT ("This candidate does not appear sufficiently coconut.")
-   │
-   ↓
-OPENCV HAIRSTYLE ANALYSIS & SCORING
-   ↓
-SOVEREIGN LEADERBOARD
+```mermaid
+graph TD
+    A[Upload Image] --> B[Coconut Eligibility Validator]
+    B --> C{Confidence >= 0.45?}
+    C -- Yes --> D[Admit to Jury Deliberation]
+    C -- No --> E[Reject Candidate: 'Not Sufficiently Coconut']
+    D --> F[5-Stage OpenCV Hairstyle Analysis]
+    F --> G[Sovereign Leaderboard & Coronation]
 ```
 
 ### Detection Metrics:
@@ -136,13 +149,21 @@ SOVEREIGN LEADERBOARD
 
 ## 🛠️ Architecture & Technology Stack
 
-- **Frontend & App Router**: [Next.js 14.2.15](https://nextjs.org/) (React 18, TypeScript 5.6)
-- **Styling & Design System**: [Tailwind CSS](https://tailwindcss.com/) with custom **Dark Green Glassmorphism** design tokens (`#04100B`, `#0A261D`, `#134434`, `#38B289`, `#D4AF37`)
-- **Computer Vision & Scientific Calibration**: Python 3.13, `opencv-python-headless>=4.8.0`, `numpy>=1.26.0`
+### 🖥️ Frontend & UI Framework
+- **Framework**: [Next.js 14.2.15](https://nextjs.org/) (App Router, React 18, TypeScript 5.6)
+- **Styling**: [Tailwind CSS 3.4](https://tailwindcss.com/) with custom **Dark Green Glassmorphism** design system (`#04100B`, `#0A261D`, `#134434`, `#38B289`, `#D4AF37`)
 - **Typography**: Google Fonts (*Playfair Display, Plus Jakarta Sans, Gayathri, Anek Malayalam, JetBrains Mono*)
-- **Interactive Visuals**: `canvas-confetti`, `lucide-react`
-- **Database & Storage**: [Supabase](https://supabase.com/) PostgreSQL + Supabase Storage (with client-side local persistence fallback)
-- **Deployment Platform**: **Vercel** (Next.js serverless edge & Node.js runtime)
+- **Animations & Effects**: `canvas-confetti`, `lucide-react`, custom CSS glass keyframes
+
+### 🐍 Computer Vision & Mathematical Engine
+- **Language & Runtime**: Python 3.13 / Serverless API Functions
+- **Libraries**: `opencv-python-headless>=4.8.0`, `numpy>=1.26.0`
+- **Fallback Engine**: Pure JavaScript spatial mathematical analysis engine for environments without Python binaries.
+
+### 💾 Database & Cloud Infrastructure
+- **Database**: [Supabase](https://supabase.com/) PostgreSQL database with client-side local persistence sync.
+- **Storage**: Supabase Object Storage (`contestants` bucket) for contestant photography.
+- **Deployment Platform**: **Vercel** ([https://thenga-royale.vercel.app](https://thenga-royale.vercel.app)) with Next.js edge routing and serverless function handlers.
 
 ---
 
@@ -159,7 +180,8 @@ thenga-royale/
 │   ├── api/
 │   │   ├── analyze/route.ts      # Next.js CV Analysis route (Python + Math Fallback)
 │   │   ├── validate/route.ts     # Next.js Eligibility Validation API route
-│   │   └── entries/route.ts      # Supabase & Local DB persistence route
+│   │   ├── entries/route.ts      # Supabase & Local DB persistence route
+│   │   └── health/route.ts       # System health check route
 │   ├── layout.tsx                # Root layout with Glassmorphism navigation
 │   └── globals.css               # Pageant design tokens, glass panels & animations
 ├── components/
@@ -167,6 +189,8 @@ thenga-royale/
 │   ├── Footer.tsx                # Pageant criteria & chambers footer
 │   ├── UploadDropzone.tsx        # Multi-image uploader & 5-stage CV scanner
 │   ├── CoronationCeremony.tsx    # Interactive 3-phase coronation ceremony
+│   ├── AnalysisResultCard.tsx    # Detailed candidate judging breakdown
+│   ├── ContestantCard.tsx        # Leaderboard candidate card
 │   ├── MetricBar.tsx             # Animated dimension score bar
 │   └── AwardBadge.tsx            # Royal pageant title sashes & badges
 ├── python/
@@ -194,11 +218,11 @@ thenga-royale/
 
 ### Prerequisites
 - Node.js `v18.17+` or `v20+`
-- Python `3.10+` (optional for local CV subprocess; built-in JS math fallback runs seamlessly if Python is omitted)
+- Python `3.10+` (optional: built-in JavaScript mathematical fallback runs if Python is omitted)
 
 ### 1. Clone & Install Dependencies
 ```bash
-git clone https://github.com/your-username/thenga-royale.git
+git clone https://github.com/liyajosepeter/thenga-royale.git
 cd thenga-royale
 
 # Install Node dependencies
@@ -223,7 +247,7 @@ npm run dev
 ```
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-### 4. Run Test Suites
+### 4. Run Test Suites & Verification
 ```bash
 # Test Python Computer Vision Engine
 python python/image_analysis.py --test
@@ -231,7 +255,7 @@ python python/image_analysis.py --test
 # Test Coconut Candidate Validator
 python python/coconut_validator.py --test
 
-# Run full TypeScript type verification
+# Run TypeScript type verification
 npx tsc --noEmit
 ```
 
@@ -241,11 +265,14 @@ npx tsc --noEmit
 
 Thenga Royale is architected for **zero-config deployment on Vercel**:
 
-1. Push your repository to **GitHub / GitLab / Bitbucket**.
-2. Navigate to [vercel.com/new](https://vercel.com/new) and import the repository.
+1. Push your repository to GitHub: `https://github.com/liyajosepeter/thenga-royale`
+2. Navigate to [Vercel Dashboard](https://vercel.com/new) and import `thenga-royale`.
 3. Framework Preset: **Next.js** (automatically detected from `vercel.json`).
-4. (Optional) Add your Supabase environment variables (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`).
-5. Click **Deploy**.
+4. (Optional) Set environment variables:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `NEXT_PUBLIC_SUPABASE_BUCKET`
+5. Click **Deploy**. Your app will be live at `https://thenga-royale.vercel.app`!
 
 ---
 
