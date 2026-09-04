@@ -137,24 +137,30 @@ export async function fetchLeaderboardEntries(): Promise<Contestant[]> {
 
       const data = response.data;
       if (data && data.length > 0) {
-        rawList = data.map((row: any, idx: number) => ({
-          id: String(row.id),
-          name: row.name || 'Contestant Palm',
-          origin: row.origin || 'Coastal Grove',
-          image_url: row.image_url,
-          created_at: row.created_at,
-          scores: {
-            volume: Number(row.volume_score) || 0,
-            spread: Number(row.spread_score) || 0,
-            symmetry: Number(row.symmetry_score) || 0,
-            wind_style: Number(row.wind_score) || 0,
-            overall: Number(row.overall_score) || 0
-          },
-          rank: idx + 1,
-          hairstyle_title: row.hairstyle_title || 'THE COASTAL RUNWAY CONTENDER',
-          jury_comment: row.jury_comment,
-          is_verified_cv: true
-        }));
+        rawList = data.map((row: any, idx: number) => {
+          let title = row.hairstyle_title || '';
+          if (title === 'THE ARBOREAL CONTENDER' || title === 'THE COASTAL RUNWAY CONTENDER') {
+            title = '';
+          }
+          return {
+            id: String(row.id),
+            name: row.name || 'Contestant Palm',
+            origin: row.origin || 'Coastal Grove',
+            image_url: row.image_url,
+            created_at: row.created_at,
+            scores: {
+              volume: Number(row.volume_score) || 0,
+              spread: Number(row.spread_score) || 0,
+              symmetry: Number(row.symmetry_score) || 0,
+              wind_style: Number(row.wind_score) || 0,
+              overall: Number(row.overall_score) || 0
+            },
+            rank: idx + 1,
+            hairstyle_title: title,
+            jury_comment: row.jury_comment,
+            is_verified_cv: true
+          };
+        });
       }
     } catch (err) {
       console.warn('[Supabase Fetch Notice]: Using local operator store', err);
@@ -169,6 +175,9 @@ export async function fetchLeaderboardEntries(): Promise<Contestant[]> {
         const localList: Contestant[] = JSON.parse(stored);
         const map = new Map<string, Contestant>();
         localList.forEach((c) => {
+          if (c.hairstyle_title === 'THE ARBOREAL CONTENDER' || c.hairstyle_title === 'THE COASTAL RUNWAY CONTENDER') {
+            c.hairstyle_title = '';
+          }
           if (!map.has(c.id)) map.set(c.id, c);
         });
         rawList = Array.from(map.values());
@@ -233,7 +242,7 @@ export async function persistCoconutEntries(contestants: Contestant[]): Promise<
         symmetry_score: c.scores.symmetry,
         wind_score: c.scores.wind_style,
         overall_score: c.scores.overall,
-        hairstyle_title: c.hairstyle_title || 'THE COASTAL RUNWAY CONTENDER',
+        hairstyle_title: (c.hairstyle_title && c.hairstyle_title !== 'THE ARBOREAL CONTENDER' && c.hairstyle_title !== 'THE COASTAL RUNWAY CONTENDER') ? c.hairstyle_title : '',
         jury_comment: c.jury_comment
       }));
 

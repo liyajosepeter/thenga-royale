@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS public.coconut_entries (
     symmetry_score NUMERIC(5, 2) NOT NULL DEFAULT 0.00,
     wind_score NUMERIC(5, 2) NOT NULL DEFAULT 0.00,
     overall_score NUMERIC(5, 2) NOT NULL DEFAULT 0.00,
-    hairstyle_title TEXT NOT NULL DEFAULT 'THE COASTAL RUNWAY CONTENDER',
+    hairstyle_title TEXT,
     jury_comment TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

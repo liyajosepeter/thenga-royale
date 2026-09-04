@@ -458,7 +458,7 @@ export default function UploadDropzone() {
             wind_style: scores.wind_style,
             overall: scores.overall
           },
-          hairstyle_title: data.hairstyle_title || 'THE COASTAL RUNWAY CONTENDER',
+          hairstyle_title: data.hairstyle_title || '',
           jury_comment: data.jury_comment || `${item.name} demonstrates certified frond architecture with calculated symmetry rating of ${scores.symmetry}%.`,
           frond_pixel_count: data.raw_measurements?.total_foliage_pixels || 35000,
           canopy_box: data.dimensions?.canopy_bounding_box || { x: 80, y: 70, width: 620, height: 410 },
@@ -620,7 +620,7 @@ export default function UploadDropzone() {
 
                     {/* Title & Name on photo */}
                     <div className="absolute bottom-3 left-3 right-3 space-y-1">
-                      {contestant.hairstyle_title && (
+                      {contestant.hairstyle_title && contestant.hairstyle_title !== 'THE ARBOREAL CONTENDER' && contestant.hairstyle_title !== 'THE COASTAL RUNWAY CONTENDER' && (
                         <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-gold-500/20 border border-gold-400/40 text-[10px] font-serif font-bold text-gold-300 uppercase tracking-wide backdrop-blur-md">
                           <Sparkles className="w-3 h-3 text-gold-400" />
                           <span>{contestant.hairstyle_title}</span>

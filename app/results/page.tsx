@@ -401,7 +401,7 @@ function ResultsContent() {
               <h1 className="font-serif text-3xl sm:text-4xl font-extrabold text-white">
                 {contestant.name}
               </h1>
-              {contestant.hairstyle_title && (
+              {contestant.hairstyle_title && contestant.hairstyle_title !== 'THE ARBOREAL CONTENDER' && contestant.hairstyle_title !== 'THE COASTAL RUNWAY CONTENDER' && (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-gold-500/20 border border-gold-400/40 text-xs font-serif font-bold text-gold-300 uppercase tracking-wide">
                   <Sparkles className="w-3.5 h-3.5 text-gold-400" />
                   <span>{contestant.hairstyle_title}</span>

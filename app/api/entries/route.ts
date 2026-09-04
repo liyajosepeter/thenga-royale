@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
       symmetry_score: item.scores?.symmetry ?? item.symmetry_score ?? 0,
       wind_score: item.scores?.wind_style ?? item.wind_score ?? 0,
       overall_score: item.scores?.overall ?? item.overall_score ?? 0,
-      hairstyle_title: item.hairstyle_title || 'THE COASTAL RUNWAY CONTENDER',
+      hairstyle_title: item.hairstyle_title || '',
       jury_comment: item.jury_comment || ''
     }));
 
