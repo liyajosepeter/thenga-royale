@@ -351,26 +351,6 @@ function ResultsContent() {
         </Link>
 
         <div className="flex flex-wrap items-center gap-2.5">
-          <button
-            onClick={() => setShowCVOverlay(!showCVOverlay)}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-medium transition-all ${
-              showCVOverlay
-                ? 'bg-emerald-600/30 text-mint-200 border border-emerald-400/40'
-                : 'bg-forest-950 text-sage-400 border border-emerald-900/40 hover:text-white'
-            }`}
-          >
-            <Layers className="w-3.5 h-3.5" />
-            <span>{showCVOverlay ? 'CV Frond Overlay: ON' : 'CV Frond Overlay: OFF'}</span>
-          </button>
-
-          <button
-            onClick={handleCopyLink}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-forest-950 hover:bg-forest-900 text-sage-300 border border-emerald-500/30 text-xs font-medium transition-colors shadow-sm"
-          >
-            {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Share2 className="w-3.5 h-3.5" />}
-            <span>{copied ? 'Link Copied!' : 'Share Dossier'}</span>
-          </button>
-
           {/* DOWNLOAD CERTIFICATE IMAGE BUTTON */}
           <button
             id="download-certificate-button"

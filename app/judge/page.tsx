@@ -27,7 +27,7 @@ export default function JudgePage() {
       <UploadDropzone />
 
       {/* Pageant Protocol Rules Footer */}
-      <div className="glass-panel p-6 rounded-3xl grid grid-cols-1 sm:grid-cols-3 gap-6 text-xs text-sage-300 border-emerald-900/30">
+      <div className="glass-panel p-6 rounded-3xl grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs text-sage-300 border-emerald-900/30">
         <div className="space-y-1.5">
           <div className="font-serif font-bold text-ivory-100 flex items-center gap-1.5 text-sm">
             <span>🌿</span>
@@ -35,16 +35,6 @@ export default function JudgePage() {
           </div>
           <p className="leading-relaxed font-sans">
             No logins or paywalls. Upload 1, 5, 10, or 20 coconut trees in a single flight.
-          </p>
-        </div>
-
-        <div className="space-y-1.5">
-          <div className="font-serif font-bold text-ivory-100 flex items-center gap-1.5 text-sm">
-            <span>⚖️</span>
-            <span>Python & OpenCV Calibrated</span>
-          </div>
-          <p className="leading-relaxed font-sans">
-            Each palm undergoes color-space foliage segmentation, convex hull extraction, and bilateral moment evaluation.
           </p>
         </div>
 

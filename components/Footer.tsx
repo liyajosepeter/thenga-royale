@@ -6,31 +6,7 @@ export default function Footer() {
   return (
     <footer className="border-t border-emerald-900/40 bg-forest-950/90 text-sage-300 py-12 mt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-          
-          <div className="md:col-span-2 space-y-3">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">🌴</span>
-              <span className="font-serif font-bold text-xl gold-gradient-text tracking-wide">
-                THENGA ROYALE 2026
-              </span>
-            </div>
-            <p className="text-sm text-sage-300/90 max-w-md leading-relaxed font-sans">
-              The premier arboreal beauty pageant dedicated to scientifically answering: <em>&ldquo;Which coconut tree has the most magnificent hairstyle?&rdquo;</em> Evaluated by Python and OpenCV computer vision.
-            </p>
-            <div className="flex items-center gap-3 pt-2">
-              <span className="px-2.5 py-1 rounded-lg bg-emerald-950/80 border border-emerald-500/25 text-[11px] font-mono text-emerald-300">
-                Python 3.13
-              </span>
-              <span className="px-2.5 py-1 rounded-lg bg-emerald-950/80 border border-emerald-500/25 text-[11px] font-mono text-emerald-300">
-                OpenCV Headless
-              </span>
-              <span className="px-2.5 py-1 rounded-lg bg-emerald-950/80 border border-gold-500/30 text-[11px] font-mono text-gold-400">
-                Vercel Serverless
-              </span>
-            </div>
-          </div>
-
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-8">
           <div>
             <h4 className="font-serif text-sm font-bold text-ivory-100 uppercase tracking-wider mb-3">
               The 4 Judging Criteria

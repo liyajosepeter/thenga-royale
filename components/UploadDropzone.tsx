@@ -165,10 +165,44 @@ export default function UploadDropzone() {
     });
   };
 
+  // Validation helper for coconut candidate eligibility check
+  const validateCoconutItem = async (item: UploadedCoconutItem): Promise<UploadedCoconutItem> => {
+    try {
+      const res = await fetch('/api/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          image_base64: item.previewUrl,
+          name: item.name
+        })
+      });
+
+      if (!res.ok) {
+        throw new Error(`Server returned HTTP ${res.status}`);
+      }
+
+      const data = await res.json();
+      return {
+        ...item,
+        validationStatus: data.valid ? 'valid' : 'invalid',
+        validationConfidence: typeof data.confidence === 'number' ? data.confidence : (data.valid ? 0.92 : 0.15),
+        validationMessage: data.message || (data.valid ? 'Coconut candidate verified.' : 'This candidate does not appear sufficiently coconut.')
+      };
+    } catch (err: any) {
+      console.warn('[Coconut Validation Warning]:', err);
+      return {
+        ...item,
+        validationStatus: 'error',
+        validationConfidence: 0.0,
+        validationMessage: 'Validation check unavailable'
+      };
+    }
+  };
+
   // Validation helper
   const validateAndProcessFiles = async (fileList: FileList | File[]) => {
     setErrorMessage(null);
-    const validFiles: UploadedCoconutItem[] = [];
+    const newItems: UploadedCoconutItem[] = [];
     const errors: string[] = [];
 
     const fileArray = Array.from(fileList);
@@ -195,16 +229,17 @@ export default function UploadDropzone() {
 
       // Read as persistent Base64 Data URL
       const previewUrl = await readFileAsDataUrl(file);
-      const smartName = getSmartContestantName(file.name, items.length + validFiles.length);
+      const smartName = getSmartContestantName(file.name, items.length + newItems.length);
 
-      validFiles.push({
+      newItems.push({
         id: `upload-${Date.now()}-${Math.random().toString(36).substring(2, 7)}-${index}`,
         previewUrl,
-        name: smartName || `Contestant Palm #${items.length + validFiles.length + 1}`,
+        name: smartName || `Contestant Palm #${items.length + newItems.length + 1}`,
         origin: 'Coastal Grove',
         fileSize: file.size,
         fileName: file.name,
-        fileType: file.type
+        fileType: file.type,
+        validationStatus: 'validating'
       });
     }
 
@@ -212,9 +247,18 @@ export default function UploadDropzone() {
       setErrorMessage(errors.join(' '));
     }
 
-    if (validFiles.length > 0) {
-      setItems((prev) => [...prev, ...validFiles]);
+    if (newItems.length > 0) {
+      setItems((prev) => [...prev, ...newItems]);
       setAnalysisCompleted(false);
+
+      // Asynchronously trigger eligibility validation for each new item
+      for (const item of newItems) {
+        validateCoconutItem(item).then((validatedItem) => {
+          setItems((prev) =>
+            prev.map((it) => (it.id === item.id ? validatedItem : it))
+          );
+        });
+      }
     }
   };
 
@@ -282,7 +326,10 @@ export default function UploadDropzone() {
         fileSize: 420000,
         fileName: 'varkala_cliff_palm.jpg',
         fileType: 'image/jpeg',
-        isSamplePreset: true
+        isSamplePreset: true,
+        validationStatus: 'valid',
+        validationConfidence: 0.94,
+        validationMessage: 'Coconut candidate verified.'
       },
       {
         id: `sample-${Date.now()}-2`,
@@ -292,7 +339,10 @@ export default function UploadDropzone() {
         fileSize: 380000,
         fileName: 'kumarakom_baron.jpg',
         fileType: 'image/jpeg',
-        isSamplePreset: true
+        isSamplePreset: true,
+        validationStatus: 'valid',
+        validationConfidence: 0.91,
+        validationMessage: 'Coconut candidate verified.'
       },
       {
         id: `sample-${Date.now()}-3`,
@@ -302,7 +352,10 @@ export default function UploadDropzone() {
         fileSize: 450000,
         fileName: 'alappuzha_monsoon.jpg',
         fileType: 'image/jpeg',
-        isSamplePreset: true
+        isSamplePreset: true,
+        validationStatus: 'valid',
+        validationConfidence: 0.96,
+        validationMessage: 'Coconut candidate verified.'
       }
     ];
 
@@ -310,10 +363,26 @@ export default function UploadDropzone() {
     setErrorMessage(null);
   };
 
-  // Real Sequential Python/OpenCV Analysis Engine
+  // Real Sequential Python/OpenCV Analysis Engine (Only evaluates eligible valid candidates)
   const handleAnalyzeAll = async () => {
     if (items.length === 0) {
       setErrorMessage('Please enter at least 1 coconut tree image before initiating jury deliberation.');
+      return;
+    }
+
+    // Check if any items are still in the validating phase
+    const isStillValidating = items.some((it) => it.validationStatus === 'validating');
+    if (isStillValidating) {
+      setErrorMessage('Please wait a moment while candidate eligibility validation finishes.');
+      return;
+    }
+
+    // Filter strictly valid coconut candidates
+    const validCandidates = items.filter((it) => it.validationStatus === 'valid');
+
+    // If all candidates are rejected, show "NO ELIGIBLE CANDIDATES" and do not start scoring
+    if (validCandidates.length === 0) {
+      setErrorMessage('NO ELIGIBLE CANDIDATES: None of the submitted images qualify as coconut palm candidates. Please upload photos containing coconut tree crowns or palm fronds.');
       return;
     }
 
@@ -321,12 +390,12 @@ export default function UploadDropzone() {
     setAnalysisCompleted(false);
     setErrorMessage(null);
 
-    const totalCount = items.length;
+    const totalCount = validCandidates.length;
     const successfulList: Contestant[] = [];
     const failedList: { id: string; name: string; previewUrl: string; error: string }[] = [];
 
     for (let i = 0; i < totalCount; i++) {
-      const item = items[i];
+      const item = validCandidates[i];
       const palmNum = i + 1;
 
       // Stage progression through CV stages
@@ -425,7 +494,7 @@ export default function UploadDropzone() {
       ? calculatePageantAwards(successfulList).allContestants
       : [];
 
-    // Persist all successful batch contestants to Supabase and LocalStorage
+    // Persist only successful verified contestants to Supabase and LocalStorage
     if (evaluatedList.length > 0) {
       await persistCoconutEntries(evaluatedList);
     }
@@ -447,6 +516,7 @@ export default function UploadDropzone() {
   };
 
   const formatPadded = (n: number) => n.toString().padStart(2, '0');
+
 
   return (
     <div className="space-y-10 max-w-5xl mx-auto">
@@ -615,11 +685,7 @@ export default function UploadDropzone() {
           {/* Top Banner with Dynamic Counter */}
           <div className="glass-panel p-6 rounded-3xl border-emerald-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl">
             <div>
-              <div className="flex items-center gap-2 text-xs font-mono text-emerald-300 uppercase tracking-wider">
-                <Cpu className="w-4 h-4" />
-                <span>Python & OpenCV Computer Vision Pipeline • No Login Required</span>
-              </div>
-              <h2 className="font-serif font-black text-2xl sm:text-3xl text-white mt-1">
+              <h2 className="font-serif font-black text-2xl sm:text-3xl text-white">
                 JURY DELIBERATION REGISTRATION
               </h2>
               <p className="text-xs sm:text-sm text-sage-300 font-sans">
@@ -636,6 +702,11 @@ export default function UploadDropzone() {
                 </div>
                 <div className="font-serif text-lg sm:text-xl font-black gold-gradient-text">
                   COCONUTS ENTERED: <span className="text-emerald-300">{items.length}</span>
+                  {items.length > 0 && items.some((it) => it.validationStatus === 'invalid') && (
+                    <span className="text-xs font-mono text-gold-300 block font-normal">
+                      ({items.filter((it) => it.validationStatus === 'valid').length} Verified Eligible)
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
@@ -672,20 +743,6 @@ export default function UploadDropzone() {
               </div>
             </div>
           </div>
-
-          {/* Quick Preset Sample Palms Loader */}
-          {items.length === 0 && (
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2 text-xs text-sage-400">
-              <span>Don&apos;t have coconut photos right now?</span>
-              <button
-                type="button"
-                onClick={handleLoadSamplePalms}
-                className="px-4 py-1.5 rounded-xl bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/40 text-emerald-300 font-serif font-bold tracking-wide transition-colors"
-              >
-                🌴 Load 3 Preset Contestant Palms
-              </button>
-            </div>
-          )}
 
           {/* Error Message */}
           {errorMessage && (
@@ -804,6 +861,73 @@ export default function UploadDropzone() {
                         />
                       </div>
 
+                      {/* Coconut Eligibility Validation Status Indicator */}
+                      <div className="pt-1">
+                        {item.validationStatus === 'validating' && (
+                          <div className="flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-forest-900/90 border border-gold-400/40 text-[11px] font-mono text-gold-300 animate-pulse">
+                            <span className="flex items-center gap-1.5 font-bold">
+                              <RefreshCw className="w-3 h-3 animate-spin text-gold-400" />
+                              <span>VALIDATING...</span>
+                            </span>
+                            <span className="text-[10px] text-sage-400">Eligibility Check</span>
+                          </div>
+                        )}
+
+                        {item.validationStatus === 'valid' && (
+                          <div className="flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-emerald-950/90 border border-emerald-500/50 text-[11px] font-mono text-emerald-300">
+                            <span className="flex items-center gap-1 font-bold">
+                              <span>🌴</span>
+                              <span>VERIFIED ✓</span>
+                            </span>
+                            <span className="text-[10px] text-emerald-400 font-bold">
+                              CONFIDENCE: {Math.round((item.validationConfidence ?? 0.92) * 100)}%
+                            </span>
+                          </div>
+                        )}
+
+                        {item.validationStatus === 'invalid' && (
+                          <div className="space-y-1 p-2.5 rounded-xl bg-red-950/80 border border-red-800/80 text-red-200">
+                            <div className="flex items-center justify-between text-[11px] font-mono font-bold text-red-300">
+                              <span className="flex items-center gap-1">
+                                <span>❌</span>
+                                <span>INELIGIBLE</span>
+                              </span>
+                              <span className="text-[10px] text-red-400 font-bold">
+                                CONFIDENCE: {Math.round((item.validationConfidence ?? 0.15) * 100)}%
+                              </span>
+                            </div>
+                            <p className="text-[10px] text-red-300/95 italic font-sans leading-tight">
+                              &ldquo;{item.validationMessage || 'This candidate does not appear sufficiently coconut.'}&rdquo;
+                            </p>
+                          </div>
+                        )}
+
+                        {item.validationStatus === 'error' && (
+                          <div className="flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-amber-950/80 border border-amber-800/80 text-[11px] font-mono text-amber-300">
+                            <span className="flex items-center gap-1 font-bold">
+                              <span>⚠️</span>
+                              <span>CHECK FAILED</span>
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setItems((prev) =>
+                                  prev.map((it) => (it.id === item.id ? { ...it, validationStatus: 'validating' } : it))
+                                );
+                                validateCoconutItem(item).then((validated) => {
+                                  setItems((prev) =>
+                                    prev.map((it) => (it.id === item.id ? validated : it))
+                                  );
+                                });
+                              }}
+                              className="text-[10px] underline hover:text-white"
+                            >
+                              Retry
+                            </button>
+                          </div>
+                        )}
+                      </div>
+
                       <div className="flex items-center justify-between text-[10px] font-mono text-sage-400 pt-1 border-t border-emerald-900/30">
                         <span>{(item.fileSize / 1024).toFixed(0)} KB</span>
                         <span className="truncate max-w-[120px]">{item.fileName}</span>
@@ -815,21 +939,38 @@ export default function UploadDropzone() {
 
               {/* Primary Action Button */}
               <div className="pt-4">
-                <button
-                  type="button"
-                  disabled={isAnalyzing || items.length === 0}
-                  onClick={handleAnalyzeAll}
-                  className={`w-full py-5 px-8 rounded-2xl font-serif font-black text-lg tracking-wide flex items-center justify-center gap-3 transition-all duration-300 shadow-2xl ${
-                    isAnalyzing || items.length === 0
-                      ? 'bg-forest-950 text-slate-600 cursor-not-allowed border border-emerald-950'
-                      : 'btn-glass-primary glow-emerald scale-[1.01] hover:scale-[1.02] active:scale-[0.99]'
-                  }`}
-                >
-                  <Sparkles className="w-6 h-6 text-gold-400" />
-                  <span>
-                    ANALYZE ALL CANDIDATES 🌴 ({items.length} {items.length === 1 ? 'CONTESTANT' : 'CONTESTANTS'})
-                  </span>
-                </button>
+                {(() => {
+                  const validCount = items.filter((it) => it.validationStatus === 'valid').length;
+                  const invalidCount = items.filter((it) => it.validationStatus === 'invalid').length;
+                  const isStillValidating = items.some((it) => it.validationStatus === 'validating');
+
+                  let buttonLabel = `ANALYZE ALL CANDIDATES 🌴 (${items.length} ${items.length === 1 ? 'CONTESTANT' : 'CONTESTANTS'})`;
+                  if (isStillValidating) {
+                    buttonLabel = `VALIDATING CANDIDATE ELIGIBILITY...`;
+                  } else if (items.length > 0 && validCount === 0) {
+                    buttonLabel = `NO ELIGIBLE CANDIDATES (${invalidCount} INELIGIBLE)`;
+                  } else if (invalidCount > 0) {
+                    buttonLabel = `ANALYZE ${validCount} VALID CANDIDATES 🌴 (${invalidCount} INELIGIBLE EXCLUDED)`;
+                  }
+
+                  const isDisabled = isAnalyzing || items.length === 0 || isStillValidating || validCount === 0;
+
+                  return (
+                    <button
+                      type="button"
+                      disabled={isDisabled}
+                      onClick={handleAnalyzeAll}
+                      className={`w-full py-5 px-8 rounded-2xl font-serif font-black text-lg tracking-wide flex items-center justify-center gap-3 transition-all duration-300 shadow-2xl ${
+                        isDisabled
+                          ? 'bg-forest-950 text-slate-600 cursor-not-allowed border border-emerald-950'
+                          : 'btn-glass-primary glow-emerald scale-[1.01] hover:scale-[1.02] active:scale-[0.99]'
+                      }`}
+                    >
+                      <Sparkles className="w-6 h-6 text-gold-400" />
+                      <span>{buttonLabel}</span>
+                    </button>
+                  );
+                })()}
               </div>
             </div>
           )}

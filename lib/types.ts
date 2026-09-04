@@ -53,4 +53,8 @@ export interface UploadedCoconutItem {
   fileName: string;
   fileType: string;
   isSamplePreset?: boolean;
+  validationStatus?: 'pending' | 'validating' | 'valid' | 'invalid' | 'error';
+  validationConfidence?: number;
+  validationMessage?: string;
 }
+
