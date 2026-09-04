@@ -118,12 +118,14 @@ body {
 .gold-gradient-text {
   background: linear-gradient(135deg, #FFF5D6 0%, #E6CA85 45%, #C59E47 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .emerald-gradient-text {
   background: linear-gradient(135deg, #E3FAF0 0%, #58C9A3 50%, #1B5C47 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
